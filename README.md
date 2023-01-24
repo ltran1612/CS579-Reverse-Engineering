@@ -23,6 +23,8 @@ This will also allow us to take snapshots of the OS to quickly go back and forth
 ### Network Isolation
 The network connections capability of the virtual machine is disabled to make sure that the malwares cannot spread to other machines in the network. 
 
+This is done by disabling all the network adapters of the virtual machine. 
+
 ### Tools Used
 To be added
 
