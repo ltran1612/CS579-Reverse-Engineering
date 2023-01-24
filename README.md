@@ -28,4 +28,4 @@ To be added
 
 ### Software Versions
 + Virtual Box Version 7.0.6 r155176 (Qt5.15.3)
-+ 64-bit Windows 10 English-version 
++ Windows 10 Home (10.0.19041.2006 / x64 / en-US)
