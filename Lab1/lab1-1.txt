@@ -18,3 +18,5 @@ MD5: 290934c61de9176ad682ffdd65f0a669
 
 # Lab01-01.dll
 C:\windows\system32\kerne132.dll
+
+We found the string "127.26.152.13", which indicates that this malware may try to talk to this IP address. 

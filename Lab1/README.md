@@ -4,7 +4,13 @@
 # Lab 1-1 
 
 ## Executive Summary
+Lab01-01.exe and Lab01-01.dll seem to be a type of malware that can create a backdoor. 
 
+It also seems to copy a file to the system32 folder and disguise that file as kernel32.dll. 
+
+It also seems to communicate with the IP address "127.26.152.13".
+
+However, to study the effect of the malware, we need more analysis. 
 
 ## Indicators of Compromise
 
@@ -21,8 +27,9 @@ Network communication with the IP address: `127.26.152.13`
 
 ## Mitigations
 
-- Delete files that match this file's hash! 
+- Delete files that match these files's hash. 
 - Scan Windows machines for `system32\kerne132.dll`
+- Check network for communication with `127.26.152.13`. 
 
 ## Evidence
 
@@ -39,20 +46,17 @@ These 2 files were flagged by 25 and 22 antivirus programs, respectively. (As of
 
 We found this string "WARNING_THIS_WILL_DESTROY_YOUR_MACHINE" indicating that it must come from a malicious person.
 
-The program also contains the string `"C:\windows\system32\kernel32.dll.dll"` indicating that they may execute some kernel level operations, which could be dangerous. 
-
-There is also the string `"C:\windows\system32\kerne132.dll"` which is "kernel32" with 'l' replaced by '1'. This indicates that they might try to disguise this dll file as Windows kernel32.dll. This is because 1 and l looks similar with the normal font.
+There is also the string `"C:\windows\system32\kerne132.dll"` which is "kernel32" with 'l' replaced by '1'. This indicates that they might try to disguise this dll file as Windows kernel32.dll. This is because 1 and l looks similar with the normal font if we do not pay close attention.
 
 #### .DLL:
-
-We found the string "127.26.152.13", which indicates that this malware may try to talk to this IP address. 
+We found the string "127.26.152.13", which indicates that this malware may try to talk to this IP address.
 
 ### PEViewer
 We used PEViewer to see the values in the .rdata section, which usually contains information about imported and exported functions. 
 
 We saw several functions relating to finding files and moving files. 
 
-Along with the suspicious kerne123.dll string, this suggests that this malware may copy a file into system32 folder. 
+Along with the suspicious kerne132.dll string, this suggests that this malware may copy a file into system32 folder. 
 Normal program will not usually copy files into system32 folder because it contains core functions of Windows. Thus, this suggests that this program has bad intention. 
 
 ### Dependancy Walker
