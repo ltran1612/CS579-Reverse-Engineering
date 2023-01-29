@@ -1,23 +1,23 @@
 # Week 1 - Simple Static Analysis
 
-This week we learned about file hashes as tools for recognizing malware samples identical to those seen by others in the past. We also learned about how to submit to Google's VirusTotal tool to see the results of scanning a file with dozens of different antivirus tools. We learned how to use `strings` to find Unicode and ASCII strings within a binary. We learned how to use PEiD to check if a binary is packed to hide its contents. We also learned how to see what Windows system tools a portable executable uses including libraries that get dynamically linked and which functions are imported.
-
 ---
 # Lab 1-1 
 
 ## Executive Summary
 
-These files appear to be malware, and they appear to engage in some kind of filesystem manipulation. We have so far not found what they do, but there are indications that it hides a `kerne1.dll` file in the `system32` directory.
 
 ## Indicators of Compromise
 
-**Compilation Date (presumed):** DEC 2010
+**Compilation Date (according to VirusTotal):** 2010-12-19 16:16:19 UTC
 
-**MD5 Hash (EXE):** bb7425b82141a1c0f7d60e5106676bb1 
+**MD5 Hash of the EXE file:** bb7425b82141a1c0f7d60e5106676bb1 
 
-**MD5 Hash (DLL):** 290934c61de9176ad682ffdd65f0a669  
+**MD5 Hash of the DLL file:** 290934c61de9176ad682ffdd65f0a669 
 
 **File to look for:** `C:\windows\system32\kerne132.dll`
+
+**Network Communication to look for:**
+Network communication with the IP address: `127.26.152.13`
 
 ## Mitigations
 
@@ -26,15 +26,39 @@ These files appear to be malware, and they appear to engage in some kind of file
 
 ## Evidence
 
-This malware consisted of two components, a portable executable (EXE) and a dynamically linked library (DLL). Submitting either to VirusTotal sets off dozens of vendors' virus classifiers.
+This malware has 2 files: a lab01-01.exe and a lab01-01.dll. 
 
-Using `strings` on the `.EXE`, we find the message string "`WARNING_THIS_WILL_DESTROY_YOUR_MACHINE`", and some references to several file manipulation functions. We also see the suspicious string "`C:\windows\system32\kerne132.dll`", which replaces the `l` in kernel with a `1`. Such a file is not present in Windows by default, so it's presence could be an indicator of compromise.
+We examined the malware with the following tools:
 
-Using `strings` on the `.DLL` did not yield anything useful.
+### VirusTotal
+These 2 files were flagged by 25 and 22 antivirus programs, respectively. (As of Jannuary 29, 2023)
 
-Opening these files with PEview, we see that they both claim to have been compiled in late 2010. This matches what VirusTotal reported, but VirusTotal only saw samples appear in mid-2012.
+### strings
 
-Using DependencyWalker on the `.EXE`, we can see which functions are imported from various other DLLs. Two of these which are particularly notable are `CreateProcess` and `Sleep`. The `Practical Malware Analysis` textbook teaches us that these functions can be combined to create a backdoor for running this malware. *(You would really only find this if you read the solutions at the back of the book, which is fair game.)*
+#### .EXE: 
+
+We found this string "WARNING_THIS_WILL_DESTROY_YOUR_MACHINE" indicating that it must come from a malicious person.
+
+The program also contains the string `"C:\windows\system32\kernel32.dll.dll"` indicating that they may execute some kernel level operations, which could be dangerous. 
+
+There is also the string `"C:\windows\system32\kerne132.dll"` which is "kernel32" with 'l' replaced by '1'. This indicates that they might try to disguise this dll file as Windows kernel32.dll. This is because 1 and l looks similar with the normal font.
+
+#### .DLL:
+
+We found the string "127.26.152.13", which indicates that this malware may try to talk to this IP address. 
+
+### PEViewer
+We used PEViewer to see the values in the .rdata section, which usually contains information about imported and exported functions. 
+
+We saw several functions relating to finding files and moving files. 
+
+Along with the suspicious kerne123.dll string, this suggests that this malware may copy a file into system32 folder. 
+Normal program will not usually copy files into system32 folder because it contains core functions of Windows. Thus, this suggests that this program has bad intention. 
+
+### Dependancy Walker
+Using DependencyWalker on the `.EXE`, we can see which functions are imported from various other DLLs. Two of these which are particularly notable are `CreateProcess` and `Sleep`. 
+
+The `Practical Malware Analysis` textbook teaches us that these functions can be combined to create a backdoor for running this malware.
 
 ---
 # Lab 1-2

@@ -1,0 +1,20 @@
+# Lab01-01.exe
+1) Uploaded Lab01-01.exe to VirusTotal.com, what happened?
+
+It matches several existing antivirus signatures, like AVG, ALYac, AhnLab-V3, Elastic, eScan, etc. 
+
+lab01-01.exe
+25 antivirus program flagged this as the virus.
+MD5: bb7425b82141a1c0f7d60e5106676bb1 
+
+lab01-01.dll
+22 antivirus programs flagged this as the virus. 
+MD5: 290934c61de9176ad682ffdd65f0a669 
+
+2) When were these files compiled?
+ 2010-12-19 16:16:19 UTC (VirusTotal)
+
+3) 
+
+# Lab01-01.dll
+C:\windows\system32\kerne132.dll
