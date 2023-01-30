@@ -81,11 +81,12 @@ However, to identify its actual behaviour, I need more analysis.
 **Compilation Date (according to VirusTotal):**  2011-01-19 16:10:41 UTC 
 
 **MD5 Hash of the file:**  8363436878404da0ae3e46991e355b83 
+
 **URL of Network Connection to look for:** URL that has words similar to "Internet Explorer".
 
 ## Mitigations
 - Remove the file with the hash.
-- Keep track the network logs for accesses to URLs with words similar to InternetExplorer. Then, we can identify the potential malicious proccess.  
+- Keep track of the network logs for accesses to URLs with words similar to InternetExplorer. Then, we can identify the potential malicious proccess.  
 
 ## Evidence
 I examined lab01-02.exe with the following tool. 
@@ -110,7 +111,7 @@ following dll:
 
 Then, I saw the following functions used:
 - InternetOpenA: According to Windows API, this is a function to initialize the use of WININET.dll. This means that the program does use the library. Along with the weird URL seen earlier, this suggests that this program accesses an URL that is obfuscated, which is typical of a malware as normal and legitimate programs have no need to do this. 
-- VirtualProtect, VirtualAlloc, GetProcAddress, and VirtualFree: According to Windows API, these are functions to change the access permission to the virtual memory of other processes and manipulate the memory. This can be used by this program to gain access to the memory of other programs, which could be dangerous. This suggests that this could be a malware.
+- VirtualProtect, VirtualAlloc, GetProcAddress, and VirtualFree: According to Windows API, these are functions to change the access permission to the virtual memory of other processes and manipulate the memory. This can be used by this program to gain access to the memory of other programs, which could be dangerous. This suggests that this could be malicious.
 
 ### Dependency Walker 
 The result of Dependency Walker only shows us the libraries and functions seen in PEViewer, so no new information was found.
