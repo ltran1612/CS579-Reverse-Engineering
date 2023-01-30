@@ -163,7 +163,7 @@ According to the Windows API, the LoadLibraryA can be used to load a library dyn
 According to the `Practical Malware Analysis` textbook, this lack of readable strings suggests that the program may be packed. 
 
 ### PEiD
-Then, using PEiD, we saw that the program was indeed packed by FSG 1.0. This suggests that the program can be malicious as normal programs are not usually packed.  
+Then, using PEiD, I saw that the program was indeed packed by FSG 1.0. This suggests that the program can be malicious as normal programs are not usually packed.  
 
 ### PEViewer
 As the result of packing, using PEViewer does not show us any useful information. 
@@ -201,12 +201,12 @@ I examined lab01-04.exe with the following tool.
 57/70 security vendors flagged this file as malicious. 
 
 ### strings
-We found several notable strings: 
+I found several notable strings: 
 - winlogon.exe: According to the Wikipedia, it is a program that is responsible for the secure attention sequence (a sequence to guarantee to the user that the logon window is secured). Also, the page says that this program is a common target of threats.     
 - \system32\wupdmgr.exe: According to file.net, this is a program that runs the Windows Update Manger. 
 - \winup.exe: According to file.net, winup.exe is a program that can be used to monitor and manipulate other programs despite not being a Windows core program. Thus, this suggests that this program is malicious. 
 
-We also found these strings: 
+I also found these strings: 
 - http://www.practicalmalwareanalysis.com/updater.exe: I tried to access this file but failed because the domain no longer exists. 
 - URLDownloadToFileA: According to Windows API, this function is used to download a file. 
 - urlmon.dll: According to processlibrary.com, urlmon.dll is used by Object Linking and Embedding process. 
