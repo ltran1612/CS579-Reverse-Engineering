@@ -158,17 +158,60 @@ Using Dependency Walker only showed KERNEL32.dll, which can be seen with the str
 # Lab 1-4
 
 ## Executive Summary
+This program seems to be malicious because it uses winup.exe which can be used to monitor and manipulate other running programs.
+
+Also, the program seems to download a file from the internet. However, besides the unaccessible link, there are no other links that I saw.  
+
+Moreover, the program seems to modify some privileges of the access token of a process. 
+
+I need to do more analysis to identify exactly which process and which privilege it is trying to modify. 
+
 ## Indicators of Compromise
+**Compilation Date (according to VirusTotal):**    2019-08-30 22:26:59 UTC 
+
+**MD5 Hash of the file:**   625ac05fd47adc3c63700c3b30de79ab 
+
 ## Mitigations
+- Remove the file with the hash.
+- Check task manager for winup.exe
+
 ## Evidence
 I examined lab01-04.exe with the following tool. 
 
 ### VirusTotal
+57/70 security vendors flagged this file as malicious. 
 
 ### strings
+We found several notable strings: 
+- winlogon.exe: According to the Wikipedia, it is a program that is responsible for the secure attention sequence (a sequence to guarantee to the user that the logon window is secured). Also, the page says that this program is a common target of threats.     
+- \system32\wupdmgr.exe: According to file.net, this is a program that runs the Windows Update Manger. 
+- \winup.exe: According to file.net, winup.exe is a program that can be used to monitor and manipulate other programs despite not being a Windows core program. Thus, this suggests that this program is malicious. 
+
+We also found these strings: 
+- http://www.practicalmalwareanalysis.com/updater.exe: trying to access this file fails because the domain no longer exists. 
+- URLDownloadToFileA: According to Windows API, this function is used to download a file. 
+- urlmon.dll: According to processlibrary.com, urlmon.dll is used by Object Linking and Embedding process. 
+
+### PEiD
+Using PEiD only shows "Microsoft Visual C++ 6.0", so the program does not seem to be packed. 
 
 ### PEViewer
+Using PEViewer does not show any new significant information. 
 
 ### Dependency Walker 
+Using Dependency Walker shows that the program uses the ADVAPI32.dll library with the following functions: 
+- OpenProcessToken: According to Windows API, this is used to open the access token of a process.
+- LookupPrivilegeValueA: According to Windows API, this is used to get the locally unique identifier value of a privilege name. 
+- AdjustTokenPrivileges: According to Windows API, this is used to enable/disable a privilege in the access token. 
+
+These 3 functions suggest that this program is trying to modify the privileges of the access token of some processes.
+Normal programs do not usually access and modify other processes because they are usually self-contained. Thus, this program could be malicious.  
+
+# References
+- wupdmgr.exe: https://www.file.net/process/wupdmgr.exe.html
+- winlogin.exe: https://en.wikipedia.org/wiki/Winlogon
+- winup.exe: https://www.file.net/process/winup.exe.html
+- urlmon.dll: https://www.processlibrary.com/en/directory/files/urlmon/19481/
+- Object Linking and Embedding: https://www.techopedia.com/definition/4995/object-linking-and-embedding-ole
 
 
