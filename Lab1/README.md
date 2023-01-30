@@ -81,6 +81,7 @@ However, to identify its actual behaviour, I need more analysis.
 **Compilation Date (according to VirusTotal):**  2011-01-19 16:10:41 UTC 
 
 **MD5 Hash of the file:**  8363436878404da0ae3e46991e355b83 
+**URL of Network Connection to look for:** URL that has words similar to "Internet Explorer".
 
 ## Mitigations
 - Remove the file with the hash.
@@ -102,7 +103,7 @@ Using PEiD did not show any packer, so the program doesn't seem to be packed.
 
 ### PEViewer
 
-Using the PEViewer, I saw the program uses the
+Using the PEViewer, I saw the program use the
 following dll:
 - ADVAPI32.dll: This suggests that the program uses registry.  
 - WININET.dll: This suggests that the program connects to the Internet. 
