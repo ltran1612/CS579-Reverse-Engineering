@@ -29,7 +29,7 @@ Network communication with the IP address: `127.26.152.13`
 
 - Delete files that match these files's hash. 
 - Scan Windows machines for `system32\kerne132.dll`
-- Check network for communication with `127.26.152.13`. 
+- Check network for communication to `127.26.152.13`. 
 
 ## Evidence
 
@@ -38,7 +38,7 @@ This malware has 2 files: a lab01-01.exe and a lab01-01.dll.
 I examined the malware with the following tools:
 
 ### VirusTotal
-These 2 files were flagged by 25 and 22 antivirus programs, respectively.
+These 2 files were flagged by 49 and 42 security vendors as malicious, respectively.
 
 ### strings
 
@@ -50,6 +50,9 @@ There is also the string `"C:\windows\system32\kerne132.dll"` which is "kernel32
 
 - #### .DLL:
 I found the string "127.26.152.13", which indicates that this malware may try to talk to this IP address.
+
+### PEiD
+Using PEiD showed only "Microsoft Visual C++ 6.0", so the program doesn't seem to be packed.  
 
 ### PEViewer
 I used PEViewer to see the values in the .rdata section, which usually contains information about imported and exported functions. 
@@ -81,17 +84,21 @@ However, to identify its actual behaviour, I need more analysis.
 
 ## Mitigations
 - Remove the file with the hash.
+- Keep track the network logs for accesses to URLs with words similar to InternetExplorer. Then, we can identify the potential malicious proccess.  
 
 ## Evidence
 I examined lab01-02.exe with the following tool. 
 
 ### VirusTotal
-The program was flagged by 27 antivirus programs. 
+The program was flagged by 53/70 security vendors flagged this as malicious. 
 
 ### strings
 I saw the string "MalService". This suggests that it's trying to access mail service. 
 
 I also saw multiple strings that can combine into "http://wwareanysisbook.coom#Int6netExplo!r 8FEI.0<". This seems to be an URL relating to InternetExplorer. The link is broken and it looks suspicious as normal programs do not have broken links. 
+
+### PEiD
+Using PEiD did not show any packer, so the program doesn't seem to be packed.  
 
 ### PEViewer
 
@@ -105,23 +112,47 @@ Then, I saw the following functions used:
 - VirtualProtect, VirtualAlloc, GetProcAddress, and VirtualFree: According to Windows API, these are functions to change the access permission to the virtual memory of other processes and manipulate the memory. This can be used by this program to gain access to the memory of other programs, which could be dangerous. This suggests that this could be a malware.
 
 ### Dependency Walker 
-The result of Dependency Walker only shows us the libraries and functions seen in PEViewer. Thus, no librabries have been dynamically linked.  
+The result of Dependency Walker only shows us the libraries and functions seen in PEViewer, so no new information was found.
 
 ---
 # Lab 1-3
 
 ## Executive Summary
+I found that the program is packed, so this suggests that this program could be malicious. 
+
+I would need to unpack and do further analysis to understand this program. 
+
 ## Indicators of Compromise
+**Compilation Date (according to VirusTotal):**   2011-03-26 06:54:39 UTC 
+
+**MD5 Hash of the file:**  9c5c27494c28ed0b14853b346b113145
+
 ## Mitigations
+- Remove the file with the hash.
+
 ## Evidence
+I examined lab01-03.exe with the following tool. 
+
 ### VirusTotal
+61/70 security vendors flagged this as malicious. 
 
 ### strings
+Running strings only show us little readable strings, the 2 most important ones are:
+- LoadLibraryA: 
+- GetProcAddress:
+
+According to the Windows API, the LoadLibraryA can be used to load a library dynamically and then we can use GetProcAddress to get the address of the function.  
+
+According to the `Practical Malware Analysis` textbook, this lack of readable strings suggest that the program may be packed. 
+
+### PEiD
+Then, using PEiD, we saw that the program was indeed packed by FSG 1.0. This suggests the maliciousness of the program as normal programs are not usually packed.  
 
 ### PEViewer
+As the result of packing, using PEViewer does not show us any useful information. 
 
 ### Dependency Walker 
-
+Using Dependency Walker only showed KERNEL32.dll, which can be seen with the strings tool, so no new useful information was found 
 
 ---
 # Lab 1-4
@@ -130,6 +161,8 @@ The result of Dependency Walker only shows us the libraries and functions seen i
 ## Indicators of Compromise
 ## Mitigations
 ## Evidence
+I examined lab01-04.exe with the following tool. 
+
 ### VirusTotal
 
 ### strings
