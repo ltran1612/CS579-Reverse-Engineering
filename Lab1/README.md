@@ -173,7 +173,7 @@ I need to do more analysis to identify exactly which process and which privilege
 
 **MD5 Hash of the file:**   625ac05fd47adc3c63700c3b30de79ab 
 
-**Check if this process is running:** If this malware is running, then winup.exe is very likely to also be running. 
+**Check if winup.exe is running:** If this malware is running, then winup.exe is very likely to also be running. 
 
 ## Mitigations
 - Remove the file with the hash.
