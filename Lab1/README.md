@@ -162,7 +162,7 @@ Using Dependency Walker only showed KERNEL32.dll, which can be seen with the str
 ## Executive Summary
 This program seems to be malicious because it uses winup.exe which can be used to monitor and manipulate other running programs.
 
-Also, the program seems to download a file from the internet. However, besides the unaccessible link, there are no other links that I saw.  
+Also, the program seems to download a file from the internet. However, besides the inaccessible link, there are no other links that I saw.  
 
 Moreover, the program seems to modify some privileges of the access token of a process. 
 
@@ -172,6 +172,8 @@ I need to do more analysis to identify exactly which process and which privilege
 **Compilation Date (according to VirusTotal):**    2019-08-30 22:26:59 UTC 
 
 **MD5 Hash of the file:**   625ac05fd47adc3c63700c3b30de79ab 
+
+**Check if this process is running:** If this malware is running, then winup.exe is very likely to also be running. 
 
 ## Mitigations
 - Remove the file with the hash.
@@ -190,7 +192,7 @@ We found several notable strings:
 - \winup.exe: According to file.net, winup.exe is a program that can be used to monitor and manipulate other programs despite not being a Windows core program. Thus, this suggests that this program is malicious. 
 
 We also found these strings: 
-- http://www.practicalmalwareanalysis.com/updater.exe: trying to access this file fails because the domain no longer exists. 
+- http://www.practicalmalwareanalysis.com/updater.exe: I tried to access this file but failed because the domain no longer exists. 
 - URLDownloadToFileA: According to Windows API, this function is used to download a file. 
 - urlmon.dll: According to processlibrary.com, urlmon.dll is used by Object Linking and Embedding process. 
 
