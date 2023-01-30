@@ -1,5 +1,20 @@
 # Week 1 - Simple Static Analysis
 
+This week, I learned about hashing to identify existing malwares and viruses so we can remove them. I used WinMD5 to hash. 
+
+I also learned to use VirusTotal website to check if a program could be malicious and find out about its compilation date. 
+
+Moreover, I used the "strings" program to get the ASCII or Unicode strings in programs. I learned to use this program to identify the functions, libraries, and URLs that malwares/viruses use. I also used it to check for signs that a program is packed.  
+
+Not only that, I learned about the PE File header and how to use PEViewer to see this header section. I learned that the PE header contains various sections including the section about imported/exported functions. 
+
+Also, I learned that a malware\virus may also be packed to hide its attack method and that we can use PEiD to check which packer was used to pack the program. 
+
+In addition, I learned that malwares/viruses can do dynamic linking of libraries to hide the libraries it uses. However, we can use Dependency Walker to identify these dynamically linked libraries. 
+
+Most importantly, I got to learn about various Windows libraries when examining these malicious programs. 
+
+
 ---
 # Lab 1-1 
 
