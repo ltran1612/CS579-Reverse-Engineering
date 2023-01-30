@@ -63,9 +63,9 @@ Along with the suspicious kerne132.dll string, this suggests that this malware m
 Normal program will not usually copy files into system32 folder because it contains core functions of Windows. Thus, this suggests that this program has bad intention. 
 
 ### Dependency Walker
-Using DependencyWalker on the `.EXE`, we can see which functions are imported from various other DLLs. Two of these which are particularly notable are `CreateProcess` and `Sleep`. 
+Using DependencyWalker on the `.EXE`, I saw 2 imported functions: `CreateProcess` and `Sleep`. 
 
-The `Practical Malware Analysis` textbook teaches us that these functions can be combined to create a backdoor for running this malware.
+According to the sample answer of this lab, the `Practical Malware Analysis` textbook teaches us that these functions can be combined to create a backdoor for running this malware.
 
 ---
 # Lab 1-2
