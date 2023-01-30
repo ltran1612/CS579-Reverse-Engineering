@@ -145,10 +145,10 @@ Running strings only show us little readable strings, the 2 most important ones 
 
 According to the Windows API, the LoadLibraryA can be used to load a library dynamically and then we can use GetProcAddress to get the address of the function.  
 
-According to the `Practical Malware Analysis` textbook, this lack of readable strings suggest that the program may be packed. 
+According to the `Practical Malware Analysis` textbook, this lack of readable strings suggests that the program may be packed. 
 
 ### PEiD
-Then, using PEiD, we saw that the program was indeed packed by FSG 1.0. This suggests the maliciousness of the program as normal programs are not usually packed.  
+Then, using PEiD, we saw that the program was indeed packed by FSG 1.0. This suggests that the program can be malicious as normal programs are not usually packed.  
 
 ### PEViewer
 As the result of packing, using PEViewer does not show us any useful information. 
