@@ -116,6 +116,7 @@ Using PEiD showed that the program was packed.
 I saw the string "MalService". This suggests that it's trying to access mail service. 
 
 I also saw the string "http://www.malwareanalysisbook.com".
+
 I also saw the string "Internet Explorer 8.0"
 
 ### PEViewer
