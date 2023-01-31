@@ -110,7 +110,7 @@ I examined lab01-02.exe with the following tool.
 The program was flagged by 53/70 security vendors flagged this as malicious. 
 
 ### PEiD
-Using PEiD showed that the program was packed. 
+Using PEiD showed that the program was packed with UPX 1.0.
 
 ### strings
 I saw the string "MalService". This suggests that it's trying to access mail service. 
