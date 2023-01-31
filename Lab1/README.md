@@ -86,9 +86,9 @@ According to the sample answer of this lab, the `Practical Malware Analysis` tex
 # Lab 1-2
 
 ## Executive Summary
-From my analysis, this malware seems to make internet access to an obfuscated URL whose name contain a string related to InternetExplorer.
+From my analysis, this malware (Lab01-02.exe) seems to make internet access to a website: "http://www.malwareanalysisbook.com"
 
-I also found that the malware seems to be finding the virutal memory of another process, changing its access permission, and modify it. 
+I also found that the malware seems to be finding the virutal memory of another process, changing its access permission, and modify it. The targeted program seems to be "Internet Explorer 8.0" as the string was in the program. 
 
 However, to identify its actual behaviour, I need more analysis. 
 
@@ -97,11 +97,11 @@ However, to identify its actual behaviour, I need more analysis.
 
 **MD5 Hash of the file:**  8363436878404da0ae3e46991e355b83 
 
-**URL of Network Connection to look for:** URL that has words similar to "Internet Explorer".
+**URL of Network Connection to look for:** "http://www.malwareanalysisbook.com"
 
 ## Mitigations
 - Remove the file with the hash.
-- Keep track of the network logs for accesses to URLs with words similar to InternetExplorer. Then, we can identify the potential malicious proccess.  
+- Keep track of the network logs for accesses to the URL: "http://www.malwareanalysisbook.com". Then, we can identify the potential malicious proccess.  
 
 ## Evidence
 I examined lab01-02.exe with the following tool. 
@@ -109,13 +109,14 @@ I examined lab01-02.exe with the following tool.
 ### VirusTotal
 The program was flagged by 53/70 security vendors flagged this as malicious. 
 
+### PEiD
+Using PEiD showed that the program was packed. 
+
 ### strings
 I saw the string "MalService". This suggests that it's trying to access mail service. 
 
-I also saw multiple strings that can combine into "http://wwareanysisbook.coom#Int6netExplo!r 8FEI.0<". This seems to be an URL relating to InternetExplorer. The link is broken and it looks suspicious as normal programs do not have broken links. 
-
-### PEiD
-Using PEiD did not show any packer, so the program doesn't seem to be packed.  
+I also saw the string "http://www.malwareanalysisbook.com".
+I also saw the string "Internet Explorer 8.0"
 
 ### PEViewer
 
@@ -125,8 +126,10 @@ following dll:
 - WININET.dll: This suggests that the program connects to the Internet. 
 
 Then, I saw the following functions used:
-- InternetOpenA: According to Windows API, this is a function to initialize the use of WININET.dll. This means that the program does use the library. Along with the weird URL seen earlier, this suggests that this program accesses an URL that is obfuscated, which is typical of a malware as normal and legitimate programs have no need to do this. 
+- InternetOpenA: According to Windows API, this is a function to initialize the use of WININET.dll. This means that the program does use the library. Along with the URL seen earlier, it seems like the malware is trying to access this website.  
 - VirtualProtect, VirtualAlloc, GetProcAddress, and VirtualFree: According to Windows API, these are functions to change the access permission to the virtual memory of other processes and manipulate the memory. This can be used by this program to gain access to the memory of other programs, which could be dangerous. This suggests that this could be malicious.
+
+Along with the string "Internet Explorer 8.0", it suggests that it's trying to gain access to the memory of Internet Explorer 8.0 to do something. 
 
 ### Dependency Walker 
 The result of Dependency Walker only shows us the libraries and functions seen in PEViewer, so no new information was found.
