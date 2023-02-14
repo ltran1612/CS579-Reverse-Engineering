@@ -1,19 +1,11 @@
-# Week 1 - Simple Static Analysis
+# Week 3 - Running the Malware
 
-This week, I learned about hashing to identify existing malwares and viruses so we can remove them. I used WinMD5 to hash. 
+This week, I learned how to set up a fake Internet using inetsim.
+However, before setting the Internet, I had to change the malware run environment from Windows 10 to Windows XP. This was because according to the Professor, Windows 10 can block all of the malwares in this lab. 
 
-I also learned to use VirusTotal website to check if a program could be malicious and find out about its compilation date. 
+Now, to set up the fake internet, I first created a virtual network with a DHCP server in VirtualBox. Then, I created another linux virtual machine (I chose Debian) to run inetsim. I then connect the 2 virtual machines to the created virtual network so that the Windows XP machine can communicate with the linux machine. 
 
-Moreover, I used the "strings" program to get the ASCII or Unicode strings in programs. I learned to use this program to identify the functions, libraries, and URLs that malwares/viruses use. I also used it to check for signs that a program is packed.  
-
-Not only that, I learned about the PE File header and how to use PEViewer to see this header section. I learned that the PE header contains various sections including the section about imported/exported functions. 
-
-Also, I learned that a malware\virus may also be packed to hide its attack method and that we can use PEiD to check which packer was used to pack the program. 
-
-In addition, I learned that malwares/viruses can do dynamic linking of libraries to hide the libraries it uses. However, we can use Dependency Walker to identify these dynamically linked libraries. 
-
-Most importantly, I got to learn about various Windows libraries when examining these malicious programs. 
-
+Then, in the Windows XP, I added the IP address of the linux machine as the DNS server on the Windows machine so that DNS requests from the Windows machine will be resolved by the linux machine. 
 
 ---
 # Lab 1-1 
