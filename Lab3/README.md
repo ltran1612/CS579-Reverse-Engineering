@@ -18,6 +18,9 @@ Using static analysis on the malware shows that:
 3) It tries to run some kernel-level operations. 
 4) The malware is packed with "PEncrypt 3.1 Final -> junkcode"
 
+Using dynamic analysis showed us that the malware added a VideoDriver registry with value ""C:\WINDOWS\system32\vmx32to64.exe". Also, the running program is the same malware that is started. 
+I also confirmed that the malware connect to "www.practicalmalwareanalysis.com" using a SSL protocol with an unknown version to inetsim. 
+
 ## Indicators of Compromise
 
 **Compilation Date (according to VirusTotal):** 2008-01-06 14:51:31 UTC
@@ -26,11 +29,13 @@ Using static analysis on the malware shows that:
 
 **Network Communication to Look for:** Connection to this URL: "www.practicalmalwareanalysis.com"
 
+**Process Name to Look for:** Lab03-01.exe
+
 ## Mitigations
 
 - Delete files that match these files's hash. 
 
-## Evidence
+## Evidence - static analysis
 
 This virus has one file: Lab03-01.exe
 
@@ -79,6 +84,38 @@ These operations are very powerful suggesting that the malware may try to affect
 Link: 
 + computerhope.com: https://www.computerhope.com/issues/ch000960.htm. Retrieved on Feb 14, 2023.
 + wikipedia: https://en.wikipedia.org/wiki/Architecture_of_Windows_NT. Retrieved on Feb 14, 2023.
+
+
+## Evidence - dynamic analysis
+
+### Procmon
+
+Using procmon shows that the malware executes the following tasks: 
+1) Load an image.
+3) Call CreateFile operations with the following files (all in system32 folder): advpack.dll
+2) Changing registries.
+4) Send a TCP request to "www.inetsim.org".
+
+### Process Explorer
+
+Using the strings tab on Process Explorer showed me "VideoDriver" string. 
+Also, the content in the strings is similar to that of the original program, so this must be running the same program. 
+
+### Regshot
+
+Using regshot showed us that 25 registries were changed and 3 were added after running the malware.
+One of the registry has the same subfolder as the one I saw in strings, while 2 of the registries changed also had subfolders similar to the values found using strings.  The rest of the registries seemed to be from wireshark as they are related to tcpip. This was due to me getting the order of executions wrong. 
+
+The added registry is: "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\VideoDriver" with the value when converted from hex to utf-16 is "C:\WINDOWS\system32\vmx32to64.exe". I also saw this .exe in strings. Thus, this malware added a VideoDriver registry with the value "C:\WINDOWS\system32\vmx32to64.exe". 
+
+The value of the 2 modified registries are "01 00 00 00 43 00 00 00 70 B7 8B E9 05 41 D9 01". However, converting this to UTF-16, UTF-8, Unicode, and ASCII only gave us gibberish values.
+
+
+### wireshark + inetsim
+
+Using wireshark showed us that the malware tries to make a query to "www.practicalmalwareanalysis.com". 
+Then, looking at inetsim, I saw that the malware is trying to make a SSL connection. However, inetsim was not able to set up a communication due to the error "SSL attempt failed: 140routines:ssl3_get_record:wrong version number".
+Thus, it seemed like the malware is connecting with an older version of SSL. 
 
 ---
 # Lab 3-2
