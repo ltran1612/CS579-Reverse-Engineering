@@ -16,6 +16,7 @@ Using static analysis on the malware shows that:
 1) It is trying to connect to a website: "www.practicalmalwareanalysis.com"
 2) It is trying to run some programs and exit some proccesses. 
 3) It tries to run some kernel-level operations. 
+4) The malware is packed with "PEncrypt 3.1 Final -> junkcode"
 
 ## Indicators of Compromise
 
@@ -262,6 +263,14 @@ Using Dependency Walker errored that it could not load and find msjava.dll. This
 
 ## Executive Summary
 
+Using static analysis, we know that: 
+    + This malware seems to be creating a GUI program. 
+    + This program seems to try to read/modify some files. 
+    + This malware seems to access to some resources.
+    + This malware seems to create a new process and copy some memory from one process to another.
+    + The malware seems to run/access svchost.exe, which is a process used to run multiple services, as well as modify scheduling or memory management.
+    + This malware was written in C++. 
+
 ## Indicators of Compromise
 
 **Compilation Date (according to VirusTotal):**  2011-04-08 17:54:23 UTC 
@@ -284,9 +293,105 @@ Checking with VirusTotal showed that this file was marked by 58 security vendors
 
 ### strings
 
+
+#### Component Analysis
+Using "strings" showed us a lot of gibberish strings with a couple of readable information:
+
+1) The strings below suggest that the malware is trying to print out a variety of errors: 
+    + runtime error 
+    + TLOSS error
+    + SING error
+    + DOMAIN error
+    + R6028
+    + - unable to initialize heap
+    + R6027
+    + - not enough space for lowio initialization
+    + R6026
+    + - not enough space for stdio initialization
+    + R6025
+    + - pure virtual function call
+    + R6024
+    + - not enough space for _onexit/atexit table
+    + R6019
+    + - unable to open console device
+    + R6018
+    + - unexpected heap error
+    + R6017
+    + - unexpected multithread lock error
+    + R6016
+    + - not enough space for thread data
+    + abnormal program termination
+    + R6009
+    + - not enough space for environment
+    + R6008
+    + - not enough space for arguments
+    + R6002
+    + - floating point not loaded
+    + Microsoft Visual C++ Runtime Library
+    + Runtime Error!
+    + <program name unknown>
+    + user32.dll: According to ProcessLibrary, user32.dll is a library for handling user interface. Link: https://www.processlibrary.com/en/directory/files/user32/19597/. Retrieved on Feb 14, 2023
+    + GetLastActivePopup
+    + GetActiveWindow
+    + MessageBoxA
+
+2) These strings below suggest that this malware is trying to modify some files: 
+    + CloseHandle
+    + VirtualFree
+    + ReadFile
+    + VirtualAlloc
+    + GetFileSize
+    + CreateFileA
+
+3) These strings suggest that this malware is creating a new process and copy some memory from one process to another, and that other process could be from running another program:
+    + ResumeThread
+    + SetThreadContext
+    + WriteProcessMemory: According to Microsoft, this function is used to copy a piece of memory from one process to a specified process. Link: https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory. Retrieved from (Feb 14, 2023)
+    + VirtualAllocEx
+    + GetProcAddress
+    + GetModuleHandleA
+    + ReadProcessMemory
+    + GetThreadContext
+    + CreateProcessA
+    + GetCommandLineA
+    + GetVersion
+    + ExitProcess
+    + TerminateProcess
+    + GetCurrentProcess
+    + Sleep
+
+4) These strings suggest that this malware is trying to access some computing resources: 
+    + FreeResource
+    + SizeofResource
+    + LockResource
+    + LoadResource
+    + FindResourceA
+    + GetSystemDirectoryA
+
+5) This suggests that the malware is trying to run/access svchost.exe, which is a process used to run multiple services, as well as modify scheduling or memory management. This is because ntdll.dll is a library that contains the functions to do those tasks: 
+    + \svchost.exe
+    + NtUnmapViewOfSection
+    + ntdll.dll
+
+#### Summary of strings
+
+In summary, we know from strings that: 
+    + This malware seems to be creating a GUI program. 
+    + This program seems to try to read/modify some files. 
+    + This malware seems to access to some resources.
+    + This malware seems to create a new process and copy some memory from one process to another.
+    + The malware seems to run/access svchost.exe, which is a process used to run multiple services, as well as modify scheduling or memory management.
+
 ### PEiD
 
-### PEViewer 
+Using PEiD on the program showed us that it uses "Microsoft Visual C++ 6.0". This suggests that the program was not packed. It also suggests that the program was written in C++. 
+
+### PEViewer
+
+Using PEViewer did not show any useful information to me. 
 
 ### Dependency Walker
+
+Using Dependency Walker showed similar to "strings" that the malware uses KERNEL32.dll and NTDLL.dll
+
 ---
