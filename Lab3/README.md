@@ -131,6 +131,10 @@ Using static analysis, we knew the following:
 6) The program was written in C++. 
 7) It's trying to run some java programs.
 
+Using dynamic analysis, I found out the following: 
+1) Running the malware seems to create a new service and running the service seems to have a child process "wscntfy.exe". This child process exe seems to be in charge of the windows security tray icon. Thus, it seems like the malware is disguising itself as a legitimate Windows process.  
+
+
 
 ## Indicators of Compromise
 
@@ -302,13 +306,43 @@ Using Dependency Walker errored that it could not load and find msjava.dll. This
 
 ## Evidence - dynamic analysis
 
-### Procmon
+I ran this line to install the dll:
+        rundll32.exe Lab03-02.dll, Install
 
-### Process Explorer
+I also run this line, thinking that it would run the dll after installation:   
+        rundll32.exe Lab03-02.dll, ServiceMain
+
+### Procmon +  Process Explorer
+
+Using procmon with a filter for Path containing Lab03-02 showed that the process created from running the dll is "svchost.exe", which corresponds to the terminal command line saw in "strings". 
+
+Using the event tab, we know the newly created process has the pid of "1056".
+
+Using process explorer to view this process of pid "1056", I found that this process has a child process: "wscntfy.exe".
+
+The command line used to run this process is: 
+        "C:\WINDOWS\System32\svchost.exe -k netsvcs"
+
+Using process explorer showed that this service uses various other services relating to Security Center. This suggests that the malware is trying fake as a security process. 
+
+Then, using procmon, I filtered out for Lab03-02 again and saw that my second command line created a process with pid of 1596. However, I was not able to show it on process explorer. 
+
+Looking back of process with "1056", before I kill it I cannot run the dll again due to process using it, but after killing that process in Process Explorer, I was able to rerun the program, confirming that it was indeed the right process. 
+
+However, trying to run the program again did not show any new processes createad. 
+
+According to Neuber, this process is to display the windows firewall tray icon. Link: https://www.neuber.com/taskmanager/process/wscntfy.exe.html
+
+As a result, it seems like this malware disguises itself as a windows firewall tray icon program. 
+
 
 ### regshot
 
+Using regshot didn't show any significnat changes as the registries changed were only only related to tcpip and process monitor (procmon).
+
 ### wireshark + inetsim
+
+Using wireshark and inetsim did not show any network connections when running the malware. 
 
 ---
 # Lab 3-3
