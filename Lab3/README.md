@@ -361,7 +361,7 @@ Using static analysis, we know that:
 Using dynamic analysis, I found that the malware:
 1) Opend some registries. 
 2) Created multipl files in important folders: system32, WinSxS
-3) Created a text file in the Chapter_3L folder containing strings relating to Process Monitor. 
+3) Created a text file in the Chapter_3L folder containing strings relating to Process Monitor. Checking the solution to this lab, it showed that this file is a keylogger and testing it in the virtual indeed showed that it was a keylogger.
 4) Send a PTR query to in-addr.arpa. 
 
 
