@@ -357,6 +357,14 @@ Using static analysis, we know that:
     + The malware seems to run/access svchost.exe, which is a process used to run multiple services, as well as modify scheduling or memory management.
     + This malware was written in C++. 
 
+
+Using dynamic analysis, I found that the malware:
+1) Opend some registries. 
+2) Created multipl files in important folders: system32, WinSxS
+3) Created a text file in the Chapter_3L folder containing strings relating to Process Monitor. 
+4) Send a PTR query to in-addr.arpa. 
+
+
 ## Indicators of Compromise
 
 **Compilation Date (according to VirusTotal):**  2011-04-08 17:54:23 UTC 
@@ -478,6 +486,30 @@ Using PEViewer did not show any useful information to me.
 
 ### Dependency Walker
 
-Using Dependency Walker showed similar to "strings" that the malware uses KERNEL32.dll and NTDLL.dll
+Using Dependency Walker showed similar to "strings" that the malware uses KERNEL32.dll and NTDLL.dll.
+
+## Evidence - dynamic analysis
+
+### Procmon +  Process Explorer
+
+Using procmon showed me that the program was:
+1) Opened some registries. 
+2) Loading some dlls.
+3) And starting scvhost.exe process with pid "1384". 
+
+Running procmon on this process showed us that: 
+1) Opend some registries. 
+2) Created multipl files in important folders: system32, WinSxS
+3) Created a text file in the Chapter_3L folder containing strings relating to Process Monitor. 
+
+
+### regshot
+
+Using regshot didn't show us any useufl registries changes. 
+
+### wireshark + inetsim
+
+Using wireshark and inetsim showed that the malware is trying to send a PTR query to in-addr.arpa. 
+
 
 ---
