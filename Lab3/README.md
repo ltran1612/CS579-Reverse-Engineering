@@ -289,11 +289,26 @@ Link:
 
 ### PEViewer 
 
-Using PEViewer did not show any useful information to me. 
+Using PEViewer showed that this .dll exported the following functions: 
+1) Install
+2) ServiceMain
+3) UninstallSErvice
+4) InstallA
+5) uninstallA
 
 ### Dependency Walker
 
 Using Dependency Walker errored that it could not load and find msjava.dll. This suggests that the malware is trying to run some java programs. 
+
+## Evidence - dynamic analysis
+
+### Procmon
+
+### Process Explorer
+
+### regshot
+
+### wireshark + inetsim
 
 ---
 # Lab 3-3
