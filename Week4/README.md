@@ -122,11 +122,11 @@ As a result, the difference between machine code and assembly code is that the c
 
 #### If the ESP register is pointing to memory address 0x001270A4 and I execute a `push eax` instruction, what address will ESP now be pointing to?
 
-
+ESP will be pointing to 0x001270A0; that is, the ESP register is decremented by 4. 
 
 #### What is a stack frame?
 
-A stack frame is a portion in the stack section of data that stores the local variables of the currently running functions, the return address to go when the function exits, and the old stack pointer before the function was called. 
+A stack frame is a portion of memory in the stack section of memory that stores the local variables and parameters of the currently running functions, the return address to go when the function exits, and the old base stack pointer before the function was called. 
 
 #### What would you find in a data section?
 
@@ -134,20 +134,29 @@ In the data section, you would find the statically defined variables and the glo
 
 #### What is the heap used for?
 
+The heap is used to store variables that are dynamically defined during runtime explicitly by the programmer in the code. 
+
+Both the stack and the heap contain dynamically defined variables. However, the difference between stack and heap is that the variables in heap will not be deallocated once allocated unless the user explicitly does it in the code, while in stack, the variables will be deallocated when the function, in which it was defined, returns.
 
 #### What is in the code section of a program's virtual memory space?
 
+The code section will contain the codes of the program. 
+
 #### What does the `inc` instruction do, and how many operands does it take?
 
-It increments the value in a register by 1. It takes 1 operand.
+It increments the value in a register by 1. It takes 1 operand which is the register to increment the value.
 
 #### If I perform a `div` instruction, where would I find the remainder of the binary division (modulo)?
 
-You would find the remainder of the binary division in the register: EDX. 
+You would find the remainder of the binary division in the register EDX. 
 
 #### How does `jz` decide whether to jump or not?
 
+'jz' will jump when ZF flag is set (or ZF = 1). 
+
 #### How does `jne` decide whether to jump or not?
+
+'jne' will jump when ZF flag is cleared (or ZF = 0).
 
 #### What does a `mov` instruction do?
 
@@ -166,7 +175,14 @@ Thus, by only allowing one instruction to execute at a time, it makes it easier 
 
 #### Why would an attacker want to control the EIP register inside a program they want to take control of?
 
+The EIP is the register that contain the address of the instruction that will be executed next.
+Thus, if an attacker can take control of the EIP register, he can control which instruction will be executed. 
+
+As a result, the attacker can use this destroy a system by running instructions that will break the system. 
+
 #### What is the AL register and how does it relate to EAX?
+
+AL register is used to access the lowest 8 bits of the EAX register. 
 
 #### What is the result of the instruction `xor eax, eax` and where is it stored?
 
@@ -175,11 +191,31 @@ The result of 'xor eax, eax' is 0, and the value is stored in the register eax.
 
 #### What does the `leave` instruction do in terms of registers to leave a stack frame?
 
+EBP: base stack pointer. The base pointer that is used as a base location to find variables inside a stack frame. 
+ESP: stack pointer. The pointer that always points to the top of the stack. 
+
+According to this website: https://docs.oracle.com/cd/E19455-01/806-3773/instructionset-70/index.html, when leave is called:
+
+1) The value of the current EBP register is copied to the ESP register. This will allow us to "remove" the local variables from the stack. However, this will keep the function arguments, the old stack base pointer, and the return address in the stack.
+
+2) Then, the old EBP register value is popped from the stack and stored in the EBP register. This will allow our EBP (base stack pointer) to be back to the caller's stack frame base pointer and "leave" the old stack frame. The popping action also decrements the ESP register to the location of the return address.
+
+This will allow 'ret' instruction to get the return address. 
+
 #### What `pop` instruction is `retn` equivalent to?
+
+According to this website: https://c9x.me/x86/html/file_module_x86_id_280.html and this https://c9x.me/x86/html/file_module_x86_id_248.html, 'ret' will be equivalent to:
+  pop EIP
 
 #### What is a stack overflow?
 
+Stack overflow happens when the stack grows too large that it overwrites the heap section, data section, and even the code section. This could happen due to a recursive function calls itself too many times without returning once. 
+
 #### What is a segmentation fault (a.k.a. a segfault)?
 
+According to this website https://smallbusiness.chron.com/segmentation-fault-linux-27699.html, Segmentation Fault happens when the program tries to access a memory location that does not exist or a memory location for which it does not have access. 
+
 #### What are the ESI and EDI registers for?
+
+According to this website http://www.cs.cmu.edu/afs/cs/academic/class/15213-f02/www/R03/section_b/x86notes.pdf, ESI and EDI are general purpose registers. They are used to store destination and source address of array copying. They can be used for register variables; that is, variables that are stored in registers instead of RAM. 
 
