@@ -102,52 +102,84 @@ We ignore the operations relating to stack_guard_value because it seems to be de
 
 #### What is the difference between machine code and assembly?
 
-#### What is the difference between machine code and assembly?If the ESP register is pointing to memory address 0x001270A4 and I execute a `push eax` instruction, what address will ESP now be pointing to?
+Machine codes are the codes that the CPU can understand directly.
 
-#### What is the difference between machine code and assembly?What is a stack frame?
+They are in the form of a binary string of certain length.
 
-#### What is the difference between machine code and assembly?What would you find in a data section?
+These binary strings are divided into multiple smaller sections (each section will have a set of possible values): 
 
-#### What is the difference between machine code and assembly?What is the heap used for?
+- opcodes: To identify which type of instruction it is. For example, an instruction to add numbers, or to read from memory. 
 
-#### What is the difference between machine code and assembly?What is in the code section of a program's virtual memory space?
+- operands: To identify what the instruction does exactly. For example, with the add instruction, the operands are the 2 registers/numbers to add, and the address/register to store them. Another example is with the read from memory, the operand would be the address to read from and the register to store the read value.  
 
-#### What is the difference between machine code and assembly?What does the `inc` instruction do, and how many operands does it take?
+However, these codes are hard to read and write since we humans don't read in 0s and 1s. 
 
-#### What is the difference between machine code and assembly?If I perform a `div` instruction, where would I find the remainder of the binary division (modulo)?
+Thus, assembly language replaces the opcodes and the operands with easy-to-read for humans alternatives. For example, the opcode for read from memory could be "READ" instead of some order of 0s and 1s. There could also be some shorcut sytax to make it easier to write codes.
 
-#### What is the difference between machine code and assembly?How does `jz` decide whether to jump or not?
+However, there is always a direct translation from a line of assembly to an equivalent same line of machine code.  
 
-#### What is the difference between machine code and assembly?How does `jne` decide whether to jump or not?
+As a result, the difference between machine code and assembly code is that the components of each line of code in the machine code is in 0s and 1s, while those of assembly codes are in a human-readable format. 
 
-#### What is the difference between machine code and assembly?What does a `mov` instruction do?
-
-#### What is the difference between machine code and assembly?What does the `TF` flag do and why is it useful for debugging?
-
-#### What is the difference between machine code and assembly?Why would an attacker want to control the EIP register inside a program they want to take control of?
-
-#### What is the difference between machine code and assembly?What is the AL register and how does it relate to EAX?
-
-#### What is the difference between machine code and assembly?What is the result of the instruction `xor eax, eax` and where is it stored?
+#### If the ESP register is pointing to memory address 0x001270A4 and I execute a `push eax` instruction, what address will ESP now be pointing to?
 
 
-#### What is the difference between machine code and assembly?What does the `leave` instruction do in terms of registers to leave a stack frame?
 
-#### What is the difference between machine code and assembly?What `pop` instruction is `retn` equivalent to?
+#### What is a stack frame?
 
-#### What is the difference between machine code and assembly?What is a stack overflow?
+A stack frame is a portion in the stack section of data that stores the local variables of the currently running functions, the return address to go when the function exits, and the old stack pointer before the function was called. 
 
-#### What is the difference between machine code and assembly?What is a segmentation fault (a.k.a. a segfault)?
+#### What would you find in a data section?
 
-#### What is the difference between machine code and assembly?What are the ESI and EDI registers for?
+In the data section, you would find the statically defined variables and the global variables of the program.
+
+#### What is the heap used for?
 
 
-#### What is the difference between machine code and assembly?What does the `leave` instruction do in terms of registers to leave a stack frame?
+#### What is in the code section of a program's virtual memory space?
 
-#### What is the difference between machine code and assembly?What `pop` instruction is `retn` equivalent to?
+#### What does the `inc` instruction do, and how many operands does it take?
 
-#### What is the difference between machine code and assembly?What is a stack overflow?
+It increments the value in a register by 1. It takes 1 operand.
 
-#### What is the difference between machine code and assembly?What is a segmentation fault (a.k.a. a segfault)?
+#### If I perform a `div` instruction, where would I find the remainder of the binary division (modulo)?
 
-#### What is the difference between machine code and assembly?What are the ESI and EDI registers for?
+You would find the remainder of the binary division in the register: EDX. 
+
+#### How does `jz` decide whether to jump or not?
+
+#### How does `jne` decide whether to jump or not?
+
+#### What does a `mov` instruction do?
+
+A 'mov' instruction can:
+- copy a value to a register. 
+- copy the value in a register to a register. 
+- copy the value in a memory location to a register. 
+
+#### What does the `TF` flag do and why is it useful for debugging?
+
+When TF flag is set, the processor will only execute one instruction at a time. 
+
+When debugging, we may want to find the effect of each instruction or try to find which instructions causing certain changes in the system. However, an x86 processor may have multiple threads or cores, so multiple executions can be executed parallely which make it difficult to identify the right instructions.
+
+Thus, by only allowing one instruction to execute at a time, it makes it easier to debug. As a result, the TF is useful for debugging. 
+
+#### Why would an attacker want to control the EIP register inside a program they want to take control of?
+
+#### What is the AL register and how does it relate to EAX?
+
+#### What is the result of the instruction `xor eax, eax` and where is it stored?
+
+The result of 'xor eax, eax' is 0, and the value is stored in the register eax. 
+
+
+#### What does the `leave` instruction do in terms of registers to leave a stack frame?
+
+#### What `pop` instruction is `retn` equivalent to?
+
+#### What is a stack overflow?
+
+#### What is a segmentation fault (a.k.a. a segfault)?
+
+#### What are the ESI and EDI registers for?
+
