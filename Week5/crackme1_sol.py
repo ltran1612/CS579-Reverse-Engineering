@@ -1,3 +1,4 @@
+# program to get the serial code for crackme 1
 from random import randint
 
 def rock_rule(num):
