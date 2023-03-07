@@ -214,23 +214,23 @@ It was shown to be written in C++ in Ghidra.
 
         "uVar6 = (ulong), uVar4 = std::basic_string<char,std::char_traits<char>,std::allocator<char>>::length(), uVar6 < uVar4"
 
-        It was initialy not clear for me what's string of which we are taking the length. However, looking at the aseembly code that showed that we were loading the address of string username into a register before calling lenght() suggested that it was the length of username we're looking for. 
-        Thus, this statement is: "i < username.length()".
+It was initialy not clear for me what's string of which we are taking the length. However, looking at the aseembly code that showed that we were loading the address of string username into a register before calling lenght() suggested that it was the length of username we're looking for. 
+Thus, this statement is: "i < username.length()".
 
 3. Initially, the program was printing "username must be between 8 and 12" and use cin to read input in username. It also output the prompt "serial number: " and input a serial number from cin. 
 4. Then, it checks if the length is greater than 8 and less than 12. 
 5. It loops from 1 to the length of the username string: 
     - It converts username[i] (for index i) to lowercase if (i bitwise and 1) is 0; that is, if i is a binary number such that the least significant bit is not 0. Since our maximum length is 12 and minimum length is 8. Such indexs are: 1, 3, 5, 7, 9, 11.  
     - It converts username[i] (for index i) to upercase otherwise.  
-    - In both cases, it will add it to a stream with "<<". I intially thought that it was going to cast the char to a string to add it to the stream, but using gdb showed otherwise. Thus, it will add the ASCII value of the converted character to the list. 
+    - In both cases, it will add it to a stream with "<<". I intially thought that it was going to cast the char to a string to add it to the stream, but using gdb showed otherwise. Thus, **it will add the string of the integer ASCII value of the converted character to the list**. For example, if the ASCII value is 45, then it will add "45" to the string. 
 
 6. The new string from step 5 is called serialString.
-7. We calculate the substring from (username.length() - 8) * 2 to -0x1 (which is the largest integer value). This means that the substring from the position till the end.
+7. We calculate the substring from (username.length() - 8) * 2 to -0x1 (which is the largest integer value). This means that the substring from the calculated position till the end.
 8. Assign the substring to serialString
 9. It loops from 0 to 8 (8 not included):
     - get serialString[i] and add it to the end of serialString2. Before the loop, serialString2 was not set, so by default according to cpp documentation, it will be an empty string. Link: https://cplusplus.com/reference/string/string/string/
     
-    Thus, we are copying serialString to serialString2. 
+    Thus, we are taking the substring of serialString from 0 to 8 and make it serialString2. 
 
 10. Create a basic_istringstream from serialString2. 
 11. Extract number in the stringstream to the integer serial. According to the documentation for the >> operator of basic_istringstream. It will extract a number from the string ignore whitespaces, if there are no numbers, it will return 0. Link: https://en.cppreference.com/w/cpp/io/basic_istream/operator_gtgt
