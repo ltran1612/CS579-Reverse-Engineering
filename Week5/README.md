@@ -206,6 +206,63 @@ The codes for the serial code generator are:
 
 ### Crackme 2 Solution (http://crackmes.cf/users/seveb/crackme05/download/crackme05.tar.gz): 
 
+To solve this crackme, you need to extract the password generated from the username you entered. 
+
+My solution is to create a Python3 program that will generate a password based on an input username. 
+
+To run the program, put the codes for the program (below) to a file and run it with python3. 
+For example, put the codes in main.py and run "python3 main.py".
+
+The codes for the password generator are:
+
+        # Crackme 2 Solution
+        # Author: Long Tran
+        
+        # A function to get the password from the username. 
+        def get_passwd(username):
+            temp_str = ""
+
+            # Point 5 in the readme
+            for i in range(len(username)):
+                temp = ""
+                if (i & 1) == 0:
+                    temp = username[i].lower()
+                else:
+                    temp = username[i].upper()
+                
+                temp_str += str(ord(temp))
+            
+            # Point 7 in the readme
+            temp_str = temp_str[(len(username) - 8) * 2:]
+
+            # Point 9 in the readme
+            temp_str = temp_str[0:8]
+
+            # Point 11 in the readme
+            result = ""
+            for c in temp_str:
+                if c.isdigit():
+                    result += c
+                elif result != "" and not c.isdigit():
+                    break
+            
+            result = int(result)
+
+            return result
+
+        # Starting Point
+        if __name__ == "__main__":
+            while True:     
+                username = input("Input your desired username: ")
+                if len(username) < 8 or len(username) > 12:
+                    continue
+                
+                passwd = get_passwd(username)
+                print("The password is", passwd)
+                break
+
+When running the program, it will ask you for the username you want to use, then it will generate a password and prints it out on the screen. 
+
 #### How I did it using Ghidra: 
 It was shown to be written in C++ in Ghidra. 
 

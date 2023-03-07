@@ -1,3 +1,7 @@
+# Crackme 2 Solution
+# Author: Long Tran
+
+# A function to get the password from the username. 
 def get_passwd(username):
     temp_str = ""
 
@@ -29,6 +33,7 @@ def get_passwd(username):
 
     return result
 
+# Starting Point
 if __name__ == "__main__":
     while True:     
         username = input("Input your desired username: ")
