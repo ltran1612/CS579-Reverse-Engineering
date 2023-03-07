@@ -204,7 +204,7 @@ The codes for the serial code generator are:
         So, input[14] == input[4] == input[9] = 0x87
 
 
-### Crackme 2 Solution (http://crackmes.cf/users/seveb/crackme05/download/crackme05.tar.gz): 
+### Crackme 2 Solution (http://crackmes.cf/users/adamziaja/crackme1/download/crackme1.tar.gz): 
 
 To solve this crackme, you need to extract the password generated from the username you entered. 
 
@@ -295,6 +295,4 @@ Thus, this statement is: "i < username.length()".
     - if the same, we print "OK"
     - else: we print "WRONG"
 
-        
-
-
+### Crackme 3 Solution (http://crackmes.cf/users/twistedtux/first_keygenme/download/keygenme.tgz): 
