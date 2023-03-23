@@ -51,6 +51,12 @@ Thus, len(input) > 16
         + 0x49 >= input[0]
         + input[0] == 0x41
 
+This means that input[0] == 0x41. 
+
+9. In lizard(), go get to our next goal: spock(), we need the following:
+        + input[1] == '6'
+9. In spock(), to get to our final goal: win(), we need the following:
+        + input[15] == '*'
 
 
 ### controlflow_2.zip Solution (): 

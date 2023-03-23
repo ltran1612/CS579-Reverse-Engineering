@@ -24,6 +24,14 @@ if __name__ == "__main__":
     choices = list(filter(second_cond, choices))
     answer[7] = random.choice(choices)
       
+    # scissors()
+    answer[0] = 0x41
+
+    # lizzard()
+    answer[1] = ord('6')
+
+    # spock()
+    answer[15] = ord('*')
 
     answer = ''.join(map(lambda x: chr(x), answer))
     print("answers:",answer)
