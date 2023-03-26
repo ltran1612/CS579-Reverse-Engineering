@@ -85,7 +85,7 @@ The only password is "strawberrykiwi", so there is no need for a keygen.
 
 12. iVar2_old = strcmp(input, (char *)&local_38). This suggests that the address of local_38 is a character pointer. Thus, the type of local_38 must be a character. So, I reypted it to char. 
 
-13. I saw that The code use strcat on local_38, which was to add string to the end of a string. It added "strawberry" and "kiwi". Initially, local_38 was set to 0. Thus, my guess is that after the two concatenation operations, local_38 is the string "strawberrykiwi". 
+13. I saw that the program use strcat on local_38, which was to add string to the end of a string. It added "strawberry" and "kiwi". Initially, local_38 was set to 0. Thus, my guess is that after the two concatenation operations, local_38 is the string "strawberrykiwi". 
 
 14. iVar2_old == 0 means that the input must be the string "strawberrykiwi". Thus, the updated condition could be: 
         
