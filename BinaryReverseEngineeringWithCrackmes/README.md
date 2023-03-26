@@ -58,12 +58,14 @@ The only password is "strawberrykiwi", so there is no need for a keygen.
 1. I opened the crackme in Ghidra. 
 2. Starting from the main() function, I looked for what could be my sink() based on the output message and I found that the sink() is when we print "you craked me" along with "Now make a keygen!". 
 3. Tracing backward, I found that the conditions are: 
-        !bVar3
-        (local_40 != 0) and (!bVar3) and (iVar1 != 0) and (iVar2 != 0)
+
+        + !bVar3
+        + (local_40 != 0) and (!bVar3) and (iVar1 != 0) and (iVar2 != 0)
         
         => (local_40 != 0) and (!bVar3) and (iVar1 != 0) and (iVar2 != 0)
         <=> (local_40 != 0) and (bVar3 == 0) and (iVar1 != 0) and (iVar2 != 0)
 4. I saw that bVar3 = (iVar2 != 0) before iVar2 was updated. So the conditions become (iVar2_old is the iVar2 before changing and iVar2_new is the iVar2 after changing):
+
         (local_40 != 0) and ((iVar2_old != 0) == 0) and (iVar1 != 0) and (iVar2_new != 0) 
 
         <=> (local_40 != 0) and (iVar2_old == 0) and (iVar1 != 0) and (iVar2_new != 0) 
@@ -74,9 +76,11 @@ The only password is "strawberrykiwi", so there is no need for a keygen.
 8. getinput() did not return any value in the codes, so it must be the former case. 
 9. Since local_48 was used as a comparison and its address was passed as the argument for getinput(). My guess is that local_48 is used to store the input from the keyboard. So, I renamed it to "input".  
 10. iVar1 = strcmp(input, "kiwi"). For iVar1 to not be 0, input must not be the string "kiwi". Thus, the updated condition is: 
+
         (local_40 != 0) and (iVar2_old == 0) and (input is not the string "kiwi") and (iVar2_new != 0) 
 
 11. iVar2_new = strcmp(input, "strawberry"). input was not modified after gotten from the keyboard. This means that input is not the string "strawberry". Thus, the updated condition is: 
+
         (local_40 != 0) and (iVar2_old == 0) and (input is not the string "kiwi") and (input is not the string "strawberry") 
 
 12. iVar2_old = strcmp(input, (char *)&local_38). This suggests that the address of local_38 is a character pointer. Thus, the type of local_38 must be a character. So, I reypted it to char. 
@@ -141,8 +145,8 @@ The codes for the keygen to generate those serial codes are:
 4. Then, it gets the parameter string length with strlen(). The program then compares if the length is less than 16. If it is, errors, else we go to rock. 
 Thus, len(input) > 16
 5. I went to rock(). Knowing that we pass in the argument, I retyped the argument type of rock() to char*. This helped me clearly see that the function was reading in the character at index 3, or the 4th character of input. 
-6. Then, to get to our next goal: paper(), that character must not be equal to 'Z', 'Z' >= the ASCII value of that character (called this input[3]), 'K' >= input[3], 'J' > input[3], and input[3] == '2'. This means that input[3] == '2'.
-7. In paper(), to get to our next goal: scissors(), by retyping the just like in rock(), I see that we need:
+6. Then, to get to our next goal, paper(), that character must not be equal to 'Z', 'Z' >= the ASCII value of that character (called this input[3]), 'K' >= input[3], 'J' > input[3], and input[3] == '2'. This means that input[3] == '2'.
+7. In paper(), to get to our next goal, scissors(), by retyping the just like in rock(), I see that we need:
 
         + input[7] - 0x25 < 0x2e => input[7] < 0x2e + 0x25
         + calculation = 1 << (byte) [(input[7] - 0x25) & 0x3f] -- cast to (byte) means we only get the least significant 8 bits of the calculation before using it in shifting.
@@ -163,9 +167,11 @@ Thus, len(input) > 16
 
 This means that input[0] == 0x41. 
 
-9. In lizard(), go get to our next goal: spock(), we need the following based on the switch statement:
+9. In lizard(), go get to our next goal, spock(), we need the following based on the switch statement:
+
         + input[1] == '6'
-10. In spock(), to get to our final goal: win(), we need the following based on the switch statement:
+10. In spock(), to get to our final goal, win(), we need the following based on the switch statement:
+
         + input[15] == '*'
 
 Finally, we reach win() and there is nothing to do here. 
@@ -212,12 +218,15 @@ The codes for the keygen to generate those serial codes are:
 7. So the general flow is main() -> ..something.. -> scissors() -> lizard() -> spock() -> win(). 
 8. We will look at the individual condition for the ones that we know first. 
 9. From scissors(), to get to the lizard(). It has a switch statement that suggests that the parameter type is actually a char * instead of long. Thus, changing the type, shows that the following condition is needed to get to lizard() from scissors():
+
     + argument[10] == 'A'
 
 10. From lizard(), to get to spock(), similar to scissors(), the following condition is needed:
+
     + argument[13] = '6'
 
 11. From spock(), to get to win(), similar to the other 2 cases, the following condition is needed:
+
     + argument[11] = '*'
 
 12. To get to scissors() from rock(), it called scissors(&DAT_00102081). However, DAT_00102081 is the char array [4, 4, null]. However, looking at the condition for scissors(), we know that this will not get us to lizard(), so this call is not correct. Thus, the only to get to scissors() is from paper(). 
@@ -229,6 +238,7 @@ The codes for the keygen to generate those serial codes are:
 15. The flow is: main() -> rock() -> paper() -> scissors() -> lizard() -> spock() -> win(). 
 
 16. The condition to get to scissors() from paper() is:
+
         + argument[8] - 0x23 < 0x38 => argument[8] < 0x38 + 0x23
         + uVar1 = 1 << ((byte)((int) argument[8] - 0x23) & 0x3f) -- byte casting, so 1 is only left shifted 8 times. 
         + uVar1 & 0xa8000080000000 == 0 => uvar1 & 0 == 0, which is always true. 
@@ -236,16 +246,20 @@ The codes for the keygen to generate those serial codes are:
         => argument[8] == 0x23.  
 
 17. To get from rock() to paper(). We need the following conditions:
+
         + argument[6] != '~'
         + argument[6] <= '~'
         + argument[6] == 'Y'
         => argument[6] == 'Y' (since 'Y' < '~')
+
 18. To get from main() to rock(), we got the first command-line argument and check if its length is less than 16. Thus, we need the following conditions:
+
         + input.length >= 16
 
 18. Looking at main(), we pass to rock the first command-line argument. Looking at rock(), paper(), scissors(), and lizard(). We pass to the next function, the same argument without changing anything. As a result, the argument is just the input. 
 
 As a result, the conditions are: 
+
 1. input[8] == 0x23
 2. input[11] == '*'
 3. input[10] == 'A'
@@ -346,17 +360,25 @@ The codes for the keygen to generate those serial codes are:
 7. To get to paper(), by using the same method, I know that rock() call paper(). So, we need to reach rock().
 8. To get to rock(), by using the same method, I know that main() call rock(). So, we need to get to rock() from main().  
 9. So the general flow is main() -> rock() -> paper() -> scissors() -> lizard() -> spock() -> win().
-10. Looking at main(), I know that the program gets the first command-line argument (I call input). Then, it checks the length of input with 16. If the length is smaller than 16, or the length is greater than 16, the program errors. If the length is 16, we call rock() with input as the argument. Thus, the condition to call rock() is inpu.length == 16.
+10. Looking at main(), I know that the program gets the first command-line argument (I call input). Then, it checks the length of input with 16. If the length is smaller than 16, or the length is greater than 16, the program errors. If the length is 16, we call rock() with input as the argument. Thus, the condition to call rock() is input.length == 16.
 11. From rock(), to get to paper(), by updating the parameter type of rock() from long to char*, I found the following conditions: 
+
         (input[1] + input[3] - ipnut[5]) == input[6]
         
 12. From paper(), to get to scissors(), by doing the same thing as with rock(), I found the following conditions:
+
         input[6] ^ input[7] < 0x03
+
 13. From scissors(), to get to lizard(), by doing the same thing, I found the following conditions:
+
         input[10] == input[12]
+
 14. From lizard(), to get to spock(), by doing the same thing, I found the following conditions:
+
         input[8] ^ input[7] >= 0x04
+
 15. From spcok(), to get to our final goal: win(), by doing the same thing, I found the following conditions: 
+
         input[8] != input[9]
         (input[12] ^ input[8] ^ input[9]) != (input[10] < 0x03)
         => case 1: (input[10] < 0x03). So, LHS != 1 (True)
