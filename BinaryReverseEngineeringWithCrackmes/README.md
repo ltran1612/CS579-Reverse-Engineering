@@ -362,7 +362,7 @@ if __name__ == "__main__":
 #### How I did it using Ghidra: 
 
 1. I opened the crackme in Ghidra. 
-2. I looked to find where the sink is searching for a code that prints something like a final result and exit with exit code of 0. I found that the sink is win(). 
+2. I looked to find where the sink is by searching for codes that prints something like a final result and exit with exit code of 0. I found that the sink is win(). 
 3. To reach to win(), we need to go to spock(). I found this by searching for references of win(), and the only function calling win() is spock().   
 4. To reach to spock(), by using the same method, I know that only lizard() called spock(). 
 5. To get to lizard(), by using the same method, I know that scissors(), spock(), and lizard() call lizard(). So, we need to get to scissors().
@@ -370,7 +370,7 @@ if __name__ == "__main__":
 7. To get to paper(), by using the same method, I know that rock() call paper(). So, we need to reach rock().
 8. To get to rock(), by using the same method, I know that main() call rock(). So, we need to get to rock() from main().  
 9. So the general flow is main() -> rock() -> paper() -> scissors() -> lizard() -> spock() -> win().
-10. Looking at main(), I know that the program gets the first command-line argument (I call input). Then, it checks the length of input with 16. If the length is smaller than 16, or the length is greater than 16, the program errors. If the length is 16, we call rock() with input as the argument. Thus, the condition to call rock() is input.length == 16.
+10. Looking at main(), I know that the program gets the first command-line argument (I call it input). Then, it checks the length of input with 16. If the length is smaller than 16, or the length is greater than 16, the program errors. If the length is 16, we call rock() with input as the argument. Thus, the condition to call rock() is input.length == 16.
 11. From rock(), to get to paper(), by updating the parameter type of rock() from long to char*, I found the following conditions: 
 
         (input[1] + input[3] - ipnut[5]) == input[6]
@@ -387,12 +387,13 @@ if __name__ == "__main__":
 
         input[8] ^ input[7] >= 0x04
 
-15. From spcok(), to get to our final goal: win(), by doing the same thing, I found the following conditions: 
+15. From spock(), to get to our final goal: win(), by doing the same thing, I found the following conditions: 
 
-        input[8] != input[9]
-        (input[12] ^ input[8] ^ input[9]) != (input[10] < 0x03)
-        => case 1: (input[10] < 0x03). So, LHS != 1 (True)
-        => case 2: (input[10] >= 0x03). So, LHS != 0 (False)
-        There are two cases, so we only need to test both. 
+        + input[8] != input[9]
+        + (input[12] ^ input[8] ^ input[9]) != (input[10] < 0x03)
+        
+        => case 1: (input[10] < 0x03). So, LHS != 1 
+        => case 2: (input[10] >= 0x03). So, LHS != 0
+        There are two cases, so we need to satisfy either case. 
 
 16. Thus, I used these conditions to create a keygen that will randomly pick values from the ASCII tables until all of the conditions are satisfied. 
