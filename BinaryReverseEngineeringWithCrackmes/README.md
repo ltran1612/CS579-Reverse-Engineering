@@ -140,13 +140,13 @@ The codes for the keygen to generate those serial codes are:
 #### How I did it using Ghidra: 
 
 1. I opened the crackme in Ghidra. 
-2. I looked for the sink of my program by starting at main, and try to go functions that will avoid printing error message and non-0 exit codes. The result I found is that we need to go as follows: main() -> rock() -> paper() -> scissor() -> lizard() -> spock() -> win() to get to the correct goal, which exit(0).  
+2. I looked for the sink of my program by starting at main, and try to get to functions or parts of codes that will avoid printing error message and non-0 exit codes. The result I found is that we need to go as follows: main() -> rock() -> paper() -> scissor() -> lizard() -> spock() -> win() to get to the correct goal, which exit(0).  
 3. Now that I know where to get, I lookek back in the "main" function to find the conditions to reach there. The main functions accept command-line arguments. I renamed the main() arguments to match the C-standard; that is, argc and argv. I noticed that the program get the first argument through accessing argv[1] (call this input). 
-4. Then, it gets the parameter string length with strlen(). The program then compares if the length is less than 16. If it is, errors, else we go to rock. 
+4. Then, it gets the input string length with strlen(). The program then compares if the length is less than 16. If it is, errors, else we go to rock. 
 Thus, len(input) > 16
-5. I went to rock(). Knowing that we pass in the argument, I retyped the argument type of rock() to char*. This helped me clearly see that the function was reading in the character at index 3, or the 4th character of input. 
+5. I went to rock(). Knowing that we pass input as the argument, I retyped the argument type of rock() to char*. This helped me clearly see that the function was reading in the character at index 3, or the 4th character of input. 
 6. Then, to get to our next goal, paper(), that character must not be equal to 'Z', 'Z' >= the ASCII value of that character (called this input[3]), 'K' >= input[3], 'J' > input[3], and input[3] == '2'. This means that input[3] == '2'.
-7. In paper(), to get to our next goal, scissors(), by retyping the just like in rock(), I see that we need:
+7. In paper(), to get to our next goal, scissors(), by retyping just like in rock(), I see that we need:
 
         + input[7] - 0x25 < 0x2e => input[7] < 0x2e + 0x25
         + calculation = 1 << (byte) [(input[7] - 0x25) & 0x3f] -- cast to (byte) means we only get the least significant 8 bits of the calculation before using it in shifting.
@@ -154,9 +154,9 @@ Thus, len(input) > 16
         + calculation & 1 != 0 => this means that the last bit must be 1
 
         This means that calculation must has the last bit to be 1. Since we left shift 1, the only time when we get such a case is when we don't shift at all. So, calculation must be 1 << 0. 
-        Thus, (byte)[(input[7] - 0x25) & 0x3f] = 0 
-        => input[7] - 0x25 = 0
-        => input[7] = 0x25
+        Thus, (byte)[(input[7] - 0x25) & 0x3f] == 0 
+        => input[7] - 0x25 == 0
+        => input[7] == 0x25
 
 8. In scissors(), to get to our next goal: lizard(), we need the following:
 
