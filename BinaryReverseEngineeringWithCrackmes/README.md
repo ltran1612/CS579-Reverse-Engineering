@@ -274,6 +274,7 @@ The codes for the keygen to generate those serial codes are:
 
 
 ```python
+# control flow 3
 import random
 # our starting possible values
 values = list(range(ord('0'), ord('z')+1))
