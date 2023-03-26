@@ -51,7 +51,7 @@ The password is "artificialtree". There is no need for a keygen because that is 
 2. Looking at the output, I saw that my input was compared with "artificialtree". This suggested that the only password could the string "artificialtree".
 3. I tested "artificialtree" and it was the correct password.  
 
-### ezcrackme3.zip Solution (): 
+### ezcrackme3.zip Solution (https://nmsu.instructure.com/courses/1524743/files/215427617?wrap=1): 
 The only password is "strawberrykiwi", so there is no need for a keygen. 
 
 #### How I did it using Ghidra:  
@@ -97,7 +97,7 @@ The only password is "strawberrykiwi", so there is no need for a keygen.
 
 17. I did not see any other codes suggesting other passwords. Thus, "strawberrykiwi" is the only password for this crackme. 
 
-### controlflow_1.zip Solution (): 
+### controlflow_1.zip Solution (https://nmsu.instructure.com/courses/1524743/files/215491475?wrap=1): 
 To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running this program.
 
 The codes for the keygen to generate those serial codes are: 
@@ -170,7 +170,7 @@ This means that input[0] == 0x41.
 
 Finally, we reach win() and there is nothing to do here. 
 
-### controlflow_2.zip Solution (): 
+### controlflow_2.zip Solution (https://nmsu.instructure.com/courses/1524743/files/215492029?wrap=1): 
 To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running the program. 
 
 The codes for the keygen to generate those serial codes are: 
@@ -253,7 +253,7 @@ As a result, the conditions are:
 5. input.length >= 16
 6. input[6] ==  'Y'
 
-### controlflow_3.zip Solution (): 
+### controlflow_3.zip Solution (https://nmsu.instructure.com/courses/1524743/files/215427731?wrap=1): 
 To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running the program. 
 
 The codes for the keygen to generate those serial codes are: 
