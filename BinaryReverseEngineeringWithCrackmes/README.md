@@ -210,7 +210,7 @@ The codes for the keygen to generate those serial codes are:
 #### How I did it using Ghidra: 
 
 1. I opened the crackme in Ghidra. 
-2. I looked to find where the sink is searching for a code that prints something like a final result and exit with exit code of 0. I found that the sink is win(). 
+2. I looked to find where the sink is by searching for codes that print something like a final result and exit with exit code of 0. I found that the sink is win(). 
 3. To reach to win(), we need to go to spock(). I found this by searching for references of win(), and the only function calling win() is spock().   
 4. To reach to spock(), by using the same method, I know that only lizard() called spock(). 
 5. To get to lizard(), by using the same method, I know that scissors(), spock(), and lizard() call lizard(). So, we need to get to scissors().
@@ -252,11 +252,11 @@ The codes for the keygen to generate those serial codes are:
         + argument[6] == 'Y'
         => argument[6] == 'Y' (since 'Y' < '~')
 
-18. To get from main() to rock(), we got the first command-line argument and check if its length is less than 16. Thus, we need the following conditions:
+18. To get from main() to rock(), we got the first command-line argument (call this input) and check if its length is less than 16. Thus, we need the following conditions:
 
         + input.length >= 16
 
-18. Looking at main(), we pass to rock the first command-line argument. Looking at rock(), paper(), scissors(), and lizard(). We pass to the next function, the same argument without changing anything. As a result, the argument is just the input. 
+18. Looking at main(), we pass to rock the first command-line argument. Looking at rock(), paper(), scissors(), and lizard(). We pass to the next function the same argument without changing anything. As a result, the argument is just the input. 
 
 As a result, the conditions are: 
 
