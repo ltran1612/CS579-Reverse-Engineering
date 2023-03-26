@@ -4,31 +4,100 @@ In this week, we did some more practices on disasseblying programs using the too
 
 ## Ghidra Lab
 ### ezcrackme1.zip Solution (https://nmsu.instructure.com/courses/1524743/files/215427565?wrap=1): 
-To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running the program. 
 
-#### How I did it using Ghidra: 
+The password is "picklecucumberl337". There is no need for a keygen because that is the only password for this crackme.
 
-1. I opened the crackme in Ghidra. 
-2. I looked for the "main" function that has 2 parameters. 
+#### How I did it:  
+1. I used `uftrace` with the "-a" flag to see the arguments of function calls and got the following output with the initial input of "test": 
+
+                # DURATION     TID     FUNCTION
+                0.350 us [  6681] | __monstartup();
+                0.160 us [  6681] | __cxa_atexit();
+                        [  6681] | main() {
+                108.878 us [  6681] |   puts("Please insert the password:") = 28;
+                        [  6681] |   getinput() {
+                2.185  s [  6681] |     getline();
+                1.333 us [  6681] |     strlen("test\n") = 5;
+                2.185  s [  6681] |   } /* getinput */
+                0.953 us [  6681] |   strcmp("test", "picklecucumberl337") = 4;
+                3.549 us [  6681] |   printf("Your password <%s> was incorrect. Time for som>
+                0.411 us [  6681] |   free(0x563784820820);
+                2.186  s [  6681] | } /* main */
+2. Looking at the output, I saw that my input was compared with "picklecucumberl337". This suggested that the only password could the string "picklecucumberl337".
+3. I tested "picklecucumberl337" and it was the correct password.  
 
 ### ezcrackme2.zip Solution (https://nmsu.instructure.com/courses/1524743/files/215427602?wrap=1): 
-To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running the program. 
 
-#### How I did it using Ghidra: 
+The password is "artificialtree". There is no need for a keygen because that is the only password for this crackme. 
 
-1. I opened the crackme in Ghidra. 
-2. I looked for the "main" function that has 2 parameters. 
+#### How I did it: 
+1. I used `uftrace` with the "-a" flag to see the arguments of function calls and got the following output with the initial input of "test": 
+
+                # DURATION     TID     FUNCTION
+                0.491 us [  6736] | __monstartup();
+                0.161 us [  6736] | __cxa_atexit();
+                        [  6736] | main() {
+                104.979 us [  6736] |   puts("Please insert the password:") = 28;
+                        [  6736] |   getinput() {
+                1.145  s [  6736] |     getline();
+                1.504 us [  6736] |     strlen("test\n") = 5;
+                1.145  s [  6736] |   } /* getinput */
+                1.263 us [  6736] |   strcmp("test", "artificialtree") = 19;
+                4.511 us [  6736] |   printf("Your password <%s> was incorrect. Time for som>
+                0.561 us [  6736] |   free(0x5637bdc15820);
+                1.145  s [  6736] | } /* main */
+             
+2. Looking at the output, I saw that my input was compared with "artificialtree". This suggested that the only password could the string "artificialtree".
+3. I tested "artificialtree" and it was the correct password.  
 
 ### ezcrackme3.zip Solution (): 
-To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running the program. 
+The only password is "strawberrykiwi", so there is no need for a keygen. 
 
-#### How I did it using Ghidra: 
-
+#### How I did it using Ghidra:  
 1. I opened the crackme in Ghidra. 
-2. I looked for the "main" function that has 2 parameters. 
+2. Starting from the main() function, I looked for what could be my sink() based on the output message and I found that the sink() is when we print "you craked me" along with "Now make a keygen!". 
+3. Tracing backward, I found that the conditions are: 
+        !bVar3
+        (local_40 != 0) and (!bVar3) and (iVar1 != 0) and (iVar2 != 0)
+        
+        => (local_40 != 0) and (!bVar3) and (iVar1 != 0) and (iVar2 != 0)
+        <=> (local_40 != 0) and (bVar3 == 0) and (iVar1 != 0) and (iVar2 != 0)
+4. I saw that bVar3 = (iVar2 != 0) before iVar2 was updated. So the conditions become (iVar2_old is the iVar2 before changing and iVar2_new is the iVar2 after changing):
+        (local_40 != 0) and ((iVar2_old != 0) == 0) and (iVar1 != 0) and (iVar2_new != 0) 
+
+        <=> (local_40 != 0) and (iVar2_old == 0) and (iVar1 != 0) and (iVar2_new != 0) 
+
+5. I saw that iVar2_old was the result of strcmp, between local_38 and loca_48. 
+6. I saw that the address of local_48 was passed as an argument to getinput(). The function name suggests that it is used to get input from the keyboard. 
+7. Searching Google did not show any API of this function. However, from my knowledge of C, I know that either a character pointer must be passed to this function to store the string, or it returns a pointer. 
+8. getinput() did not return any value in the codes, so it must be the former case. 
+9. Since local_48 was used as a comparison and its address was passed as the argument for getinput(). My guess is that local_48 is used to store the input from the keyboard. So, I renamed it to "input".  
+10. iVar1 = strcmp(input, "kiwi"). For iVar1 to not be 0, input must not be the string "kiwi". Thus, the updated condition is: 
+        (local_40 != 0) and (iVar2_old == 0) and (input is not the string "kiwi") and (iVar2_new != 0) 
+
+11. iVar2_new = strcmp(input, "strawberry"). input was not modified after gotten from the keyboard. This means that input is not the string "strawberry". Thus, the updated condition is: 
+        (local_40 != 0) and (iVar2_old == 0) and (input is not the string "kiwi") and (input is not the string "strawberry") 
+
+12. iVar2_old = strcmp(input, (char *)&local_38). This suggests that the address of local_38 is a character pointer. Thus, the type of local_38 must be a character. So, I reypted it to char. 
+
+13. I saw that The code use strcat on local_38, which was to add string to the end of a string. It added "strawberry" and "kiwi". Initially, local_38 was set to 0. Thus, my guess is that after the two concatenation operations, local_38 is the string "strawberrykiwi". 
+
+14. iVar2_old == 0 means that the input must be the string "strawberrykiwi". Thus, the updated condition could be: 
+        
+        (local_40 != 0) and (input is the string "strawberrykiwi") and (input is not the string "kiwi") and (input is not the string "strawberry") 
+
+15. The address of local_40 was passsed as an argument to getinput(). Since local_48 was our guess to store the input. Then, maybe local_40 was used to store the length of the number of characters read. This makes sense because character pointer does not store the length of the array, so we need a second variable to store that information. Thus, our updated condition could be: 
+
+        (input length is not 0) and (input is the string "strawberrykiwi") and (input is not the string "kiwi") and (input is not the string "strawberry") 
+
+        <=> input is the string "strawberrykiwi"
+
+16. Testing the string "strawberrykiwi" as the password showed that it worked. 
+
+17. I did not see any other codes suggesting other passwords. Thus, "strawberrykiwi" is the only password for this crackme. 
 
 ### controlflow_1.zip Solution (): 
-To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running the program. 
+To solve this crackme, you need to put a right serial code that matches certain conditions as the first command-line argument of the crackme program when running this program:
 
 #### How I did it using Ghidra: 
 
