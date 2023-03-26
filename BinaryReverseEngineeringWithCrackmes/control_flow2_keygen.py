@@ -1,6 +1,6 @@
 import random
 # our starting possible values
-values = list(range(ord('!'), ord('z')+1))
+values = list(range(ord('0'), ord('z')+1))
 values.remove(ord('`'))
 
 if __name__ == "__main__":
