@@ -6,7 +6,10 @@ In this week, we did some more practices on disasseblying programs using the too
 
 ### ransomware_1 Solution (): 
 
-Run the below code with the encrypted file path as a command-line argument to decrypt the file. 
+Put the below program to a file named main.py.
+
+Run "python3 main.py <path_to_the_encrypted_file>". 
+
 The codes for the decryptor to decrypt is: 
 
 ```python
@@ -70,7 +73,10 @@ The decrypted result of secret.text.payup is:
 
 ### ransomware_2 Solution (): 
 
-Run the below code with the encrypted file path as a command-line argument to decrypt the file. 
+Put the below program to a file named main.py.
+
+Run "python3 main.py <path_to_the_encrypted_file>". 
+
 The codes for the decryptor to decrypt is: 
 
 ```python
@@ -184,7 +190,10 @@ The decrypted result of secret.text.payup is:
 
 ### ransomware_3 Solution (): 
 
-Run the below code with the encrypted file path as a command-line argument to decrypt the file. 
+Put the below program to a file named main.py.
+
+Run "python3 main.py <path_to_the_encrypted_file>". 
+
 The codes for the decryptor to decrypt is: 
 
 ```python
