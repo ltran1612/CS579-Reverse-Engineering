@@ -1,4 +1,4 @@
-# Binary Reverse Engineering with Crackmes 
+# Binary Reverse Engineering with Ransomware Crackmes 
 
 In this week, we did some more practices on disasseblying programs using the tools (Ghidra). In this week, the programs were modified so that we cannot use uftrace.  
 
