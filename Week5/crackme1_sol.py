@@ -117,5 +117,6 @@ result[14] = 0x2D
 result[9] = 0x2D
 
 print("pass cracker:", get_result(result))
+print("final pass is", get_result(result))
 
 

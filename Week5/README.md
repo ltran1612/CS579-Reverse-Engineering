@@ -21,7 +21,7 @@ For example, put the codes in main.py and run "python3 main.py".
 The codes for the serial code generator are: 
 
 ```python
-# program to get the serial code for for crackme 1
+# program to get the serial code for crackme 1
 from random import randint
 
 def rock_rule(num):
@@ -140,6 +140,7 @@ result[14] = 0x2D
 result[9] = 0x2D
 
 print("pass cracker:", get_result(result))
+print("final pass is", get_result(result))
 ```
 
 #### How I did it using Ghidra: 
