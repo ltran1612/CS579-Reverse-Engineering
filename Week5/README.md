@@ -385,13 +385,13 @@ int main(int argc, char ** argv) {
 10. There are some for loop before the if conditional changing some variables, but those 2 variables were never used in calculating str2. So, we will ignore them. 
 11. Now look at the for loop, we now know that it will loop 7 times (hex35478 = 0x35478, str8_char="7030726e"): 
 
-    hex35478 = process_id ^ hex35478;
-    temp = hex35478 + str8_char[i] + 0x5c;
-    oil(&hex35478,&temp);
-    sprintf(str_buf,"%d",temp);
-    str2Length = strlen(str_buf);
-    strncat((char *)&str2,str_buf,str2Length);
-    hex35478 = hex35478 << 7;
+            hex35478 = process_id ^ hex35478;
+            temp = hex35478 + str8_char[i] + 0x5c;
+            oil(&hex35478,&temp);
+            sprintf(str_buf,"%d",temp);
+            str2Length = strlen(str_buf);
+            strncat((char *)&str2,str_buf,str2Length);
+            hex35478 = hex35478 << 7;
 
 12. oil(hex, temp) function is:
 
@@ -400,14 +400,14 @@ int main(int argc, char ** argv) {
 
 13. Thus, the loop operation becomes: 
 
-    hex35478 = process_id ^ hex35478;
-    temp = hex35478 + str8_char[i] + 0x5c;
-    temp = temp ^ 4;
-    hex35478 = hex35478 | 0x2e39f3;
-    sprintf(str_buf,"%d",temp);
-    str2Length = strlen(str_buf);
-    strncat((char *)&str2,str_buf,str2Length);
-    hex35478 = hex35478 << 7;
+            hex35478 = process_id ^ hex35478;
+            temp = hex35478 + str8_char[i] + 0x5c;
+            temp = temp ^ 4;
+            hex35478 = hex35478 | 0x2e39f3;
+            sprintf(str_buf,"%d",temp);
+            str2Length = strlen(str_buf);
+            strncat((char *)&str2,str_buf,str2Length);
+            hex35478 = hex35478 << 7;
 
 14. However, looking at the definition of str1 and str2, I see that it is not defined with a size, so it is just a char *. Thus, when we put characters into them, we are overwriting other variables and from the order of definition, it could be the 2 array with size 88. Looking at the for loop that sets the two array showed that they were just setting the array elements to 0. Thus, we need to set the array of the serial code to 0 before calculating the code. 
 
