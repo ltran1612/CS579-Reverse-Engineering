@@ -411,4 +411,4 @@ int main(int argc, char ** argv) {
 
 14. However, looking at the definition of str1 and str2, I see that it is not defined with a size, so it is just a char *. Thus, when we put characters into them, we are overwriting other variables and from the order of definition, it could be the 2 array with size 88. Looking at the for loop that sets the two array showed that they were just setting the array elements to 0. Thus, we need to set the array of the serial code to 0 before calculating the code. 
 
-15. As a result, to solve this problem, I just need to generate a program that will give me the serial key based on these operations. This program will run the crackme program as a child process to get its process id to get the serial key.
+15. As a result, to solve this problem, I just need to generate a program that will give me the serial key based on these operations. This program will get the process id, calculate the serial code, and execute the crackme program in the same process using execl(). The user will just need to copy the serial code and enter it when the crackme program prompts for it. 
