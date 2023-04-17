@@ -67,6 +67,25 @@ The overview of sink() in lab12-01.exe is:
 
   ![func](./sink.png) 
 
+
+Now, let's analyze the Lab12-01.dll that was loaded by the .exe file.
+
+Using PEViewer did not show any exported function that the dll have. However, using Ghidra showed that there was the entry function, which is the start of the program, so DLLMain is the entry() function in the .dll file. 
+
+
+The overview of the process of the .dll file is:
+
+  1. The entry function, which is the start of the program, has 3 parameters. 
+  2. Given the information below that the programs periodically do things. 
+  
+  Using forward engineering, I guess that the program must use the Sleep function to wait. Thus, I searched for instances of Sleep() and found a function that has a while loop and Sleep. 
+  
+  Looking for references of Sleep() only shows one function, so the function that I found was probably the right one. 
+  
+  I renamed the function to sink(). 
+  
+  Tracing references of sink, I found the function that called sink() from entry(), I renamed the function to start_sink(). 
+
 ## Answer
 1. Prove that the loader is using DLL injection. (Don't forget a relevant snapshot in Ghidra.)
 
@@ -85,6 +104,19 @@ This is because in step 3 above, when the program finds the process to inject th
 
 3. Identify the entry point of the DLL injection. Where is DllMain?
 
+DLLMain is the entry function. This is because when a DLL is loaded, it loads the entry function of the program. 
+
+This is also because when using PEViewer, there were no functions exported and in the .exe file, it was not loading any specific function. 
+
+![dll_entry image](./dll_entry.png) 
+
 4. This malware does something every ______ seconds. How often, and where is the loop where that waiting happens?
+
+The malware does something every 60,000 miliseconds. 
+
+Link to sleep: https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep
+
+
+![dll_sink image](./dll_sink.png) 
 
 5. What does the malware do every _______ seconds?
