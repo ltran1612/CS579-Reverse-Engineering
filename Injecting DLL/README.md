@@ -9,13 +9,15 @@ The goal of this lab was to figure out how the lab12-01.exe inject into Windows 
 I started with the sink, I know that the program must be openning some processes to access processes, so I searched for function calls to OpenProcess and found a function called in entry() that does this. I renamed it to sink() (see image below).
 
 The overview of the process is: 
+
  1. It loads "psapi.dll", which is an interface for getting the process status of application, using LoadLibraryA(). It then uses GetProcAddress() to get the handles of the following functions inside "psapi.dll":
-      - EnumProcessModules()
-      - GetModuleBaseNameA()
-      - EnumProcesses()
+      - EnumProcessModules() (line 41-43)
+      - GetModuleBaseNameA() (line 44-46)
+      - EnumProcesses() (line 47-49)
     These functions are used to locate the target process into which this malware injects.
 
     ![sink function](./step1.png)
+
   2. It gets the curret directory and gets the path to the DLL to inject. 
   3. It then finds the process into which to inject. It does this by: 
       1. It uses EnumProcesses() to get the PID of each process in the system (line...). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
