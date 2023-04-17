@@ -89,38 +89,38 @@ The overview of the process of the .dll file is:
 ## Answer
 1. Prove that the loader is using DLL injection. (Don't forget a relevant snapshot in Ghidra.)
 
-The loader was using DLL Injection. 
+  The loader was using DLL Injection. 
 
-The reason is because of the following steps in the above process overview: 
+  The reason is because of the following steps in the above process overview: 
 
-  - Step 4: Write the DLL to the memory of the process. 
-  - Step 4: Create a remote thread in the target process to load the DLL. 
+    - Step 4: Write the DLL to the memory of the process. 
+    - Step 4: Create a remote thread in the target process to load the DLL. 
  
 2. Identify the process that will be injected into. Seeing a string in Ghidra isn't sufficient -- explain how the process gets selected.
 
-The proces that will be injected into is "explorer.exe", which is the Windows File Explorer.
+  The proces that will be injected into is "explorer.exe", which is the Windows File Explorer.
 
-This is because in step 3 above, when the program finds the process to inject the DLL, it was checking the module name of the process to see if it contains the string "explorer.exe". 
+  This is because in step 3 above, when the program finds the process to inject the DLL, it was checking the module name of the process to see if it contains the string "explorer.exe". 
 
 3. Identify the entry point of the DLL injection. Where is DllMain?
 
-DLLMain is the entry function. This is because when a DLL is loaded, it loads the entry function of the program. 
+  DLLMain is the entry function. This is because when a DLL is loaded, it loads the entry function of the program. 
 
-This is also because when using PEViewer, there were no functions exported and in the .exe file, it was not loading any specific function. 
+  This is also because when using PEViewer, there were no functions exported and in the .exe file, it was not loading any specific function. 
 
-![dll_entry image](./dll_entry.png) 
+  ![dll_entry image](./dll_entry.png) 
 
 4. This malware does something every ______ seconds. How often, and where is the loop where that waiting happens?
 
-The malware does something every 60,000 miliseconds. 
+  The malware does something every 60,000 miliseconds. 
 
-Link to Sleep: https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep
+  Link to Sleep: https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep
 
 
-![dll_sink image](./dll_sink.png) 
+  ![dll_sink image](./dll_sink.png) 
 
 5. What does the malware do every _______ seconds?
 
-Every 60,000 miliseconds, it does action() function which accepts a buffer and the string "Malware Analysis %d". 
+  Every 60,000 miliseconds, it does action() function which accepts a buffer and the string "Malware Analysis %d". 
 
-![dll_action image](./dll_action.png) 
+  ![dll_action image](./dll_action.png) 
