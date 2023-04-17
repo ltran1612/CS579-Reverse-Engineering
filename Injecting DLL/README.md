@@ -29,9 +29,10 @@ The overview of sink() in lab12-01.exe is:
   ![step2](./step2.png)
 
   3. It then finds the process into which to inject. It does this by: 
-    1. It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
+    
+    - It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
 
-    2. It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
+    - It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
 
   ![step3-1](./step3-1.png)
 
@@ -76,6 +77,7 @@ Using PEViewer did not show any exported function that the dll have. However, us
 The overview of the process of the .dll file is:
 
   1. The entry function, which is the start of the program, has 3 parameters. 
+
   2. Given the information below that the programs periodically do things. 
   
   Using forward engineering, I guess that the program must use the Sleep function to wait. Thus, I searched for instances of Sleep() and found a function that has a while loop and Sleep. 
