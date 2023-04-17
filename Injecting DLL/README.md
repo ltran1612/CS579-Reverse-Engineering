@@ -30,9 +30,9 @@ The overview of sink() in lab12-01.exe is:
 
   3. It then finds the process into which to inject. It does this by: 
     
-    - It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
+  - It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
 
-    - It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
+  - It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
 
   ![step3-1](./step3-1.png)
 
