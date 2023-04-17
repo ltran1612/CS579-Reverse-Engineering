@@ -37,7 +37,6 @@ The overview of the process is:
 
       ![checkprocess](./check_proc.png)    
 
-     ![step3](./step3-1.png)
   4. After finding the right process, it allocates a space in the target process memory. 
   5. Then, it writes the DLL to that memory address. 
   6. It then find the LoadLibraryA() function inside the target process. 
