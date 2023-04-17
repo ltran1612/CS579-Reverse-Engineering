@@ -31,16 +31,26 @@ The overview of the process is:
 
 
       Let's analyze check_process(pid).
+
       First, it opens pid, uses EnumProcessModules() retrieve the handle for one module in the process according to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules. 
+      
       Then, it uses GetModuleBaseNameA() to get the base name of that single module. 
+
       Finally, it uses the contains() function to check if the module name contains the string "explorer.exe". The contains function works like this...
 
       ![checkprocess](./check_proc.png)    
 
   4. After finding the right process, it allocates a space in the target process memory. 
-  5. Then, it writes the DLL to that memory address. 
-  6. It then find the LoadLibraryA() function inside the target process. 
-  7. It creates a remote thread in the target process using GetProcAddress() and runs the LoadLibraryA() function in that thread to load the DLL under the target process. This is the most obvious sign of a DLL injection.  
+  
+  Then, it writes the DLL to that memory address. 
+  
+  It then find the LoadLibraryA() function inside the target process. 
+  
+  It creates a remote thread in the target process using GetProcAddress() and runs the LoadLibraryA() function in that thread to load the DLL under the target process. 
+  
+  This is the most obvious sign of a DLL injection.  
+
+  ![func](./sink.png) 
 
 ## Answer
 1. Prove that the loader is using DLL injection. (Don't forget a relevant snapshot in Ghidra.)
