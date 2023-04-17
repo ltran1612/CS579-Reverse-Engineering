@@ -95,8 +95,8 @@ The overview of the process of the .dll file is:
 
   The reason is because of the following steps in the above process overview: 
 
-    - Step 4: Write the DLL to the memory of the process. 
-    - Step 4: Create a remote thread in the target process to load the DLL. 
+  - Step 4: Write the DLL to the memory of the process. 
+  - Step 4: Create a remote thread in the target process to load the DLL. 
  
 2. Identify the process that will be injected into. Seeing a string in Ghidra isn't sufficient -- explain how the process gets selected.
 
