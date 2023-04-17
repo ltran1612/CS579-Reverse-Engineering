@@ -46,7 +46,14 @@ The overview of sink() in lab12-01.exe is:
     
     ![checkprocess](./check_proc.png)  
     
-    The contains function works like this...
+    The contains function works like this:
+    - It compares each character of the base string to that of the target string. 
+    - Line 20 and 23 made sure that upper-case alphabet characters are converted into lower-case versions. 
+    - It returns 0 if all characters of the base string upto the target size match with the target string.
+    - It returns 0xffffffff if there is a character that is not the same. 
+    - It returns 0x1 if the ASCII value of the target character is not greater than the base character. 
+
+    ![contains](./contains.png)      
 
   4. After finding the right process, it allocates a space in the target process memory. 
   
