@@ -6,14 +6,20 @@ The goal of this lab was to figure out how the lab12-01.exe inject into Windows 
 
 ## Process Overview
 
-I started with the sink, I know that the program must be openning some processes to access processes, so I searched for function calls to OpenProcess and found a function called in entry() that does this. I renamed it to sink() (see image below).
+I started with the .exe file because it is the loader for the .dll file.
 
-The overview of the process is: 
+I started with the sink of the .exe file, I know that the program must be openning some processes to access processes, so I searched for function calls to OpenProcess and found a function called in entry() that does this. 
+
+I renamed it to sink().
+
+The overview of sink() in lab12-01.exe is: 
 
  1. It loads "psapi.dll", which is an interface for getting the process status of application, using LoadLibraryA(). It then uses GetProcAddress() to get the handles of the following functions inside "psapi.dll":
-      - EnumProcessModules() (line 41-43)
-      - GetModuleBaseNameA() (line 44-46)
-      - EnumProcesses() (line 47-49)
+
+    - EnumProcessModules() (line 41-43)
+    - GetModuleBaseNameA() (line 44-46)
+    - EnumProcesses() (line 47-49)
+
     These functions are used to locate the target process into which this malware injects.
 
   ![step1](./step1.png)
@@ -23,22 +29,26 @@ The overview of the process is:
   ![step2](./step2.png)
 
   3. It then finds the process into which to inject. It does this by: 
-      1. It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
+    1. It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
 
-      2. It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
+    2. It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
 
   ![step3-1](./step3-1.png)
 
 
-      Let's analyze check_process(pid).
+    Let's analyze check_process(pid).
 
-      First, it opens pid, uses EnumProcessModules() retrieve the handle for one module in the process according to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules. 
-      
-      Then, it uses GetModuleBaseNameA() to get the base name of that single module. 
+    First, it opens pid, uses EnumProcessModules() retrieve the handle for one module in the process according to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules. 
+    
+    Then, it uses GetModuleBaseNameA() to get the base name of that single module. 
 
-      Finally, it uses the contains() function to check if the module name contains the string "explorer.exe". The contains function works like this...
+    Finally, it uses the contains() function to check if the module name contains the string "explorer.exe". 
+    
+    ![checkprocess](./check_proc.png)  
+    
+    The contains function works like this...
 
-  ![checkprocess](./check_proc.png)    
+  
 
   4. After finding the right process, it allocates a space in the target process memory. 
   
@@ -56,9 +66,11 @@ The overview of the process is:
 1. Prove that the loader is using DLL injection. (Don't forget a relevant snapshot in Ghidra.)
 
 The loader was using DLL Injection. 
+
 The reason is because of the following steps in the above process overview: 
+
   1. Step 4: Write the DLL to the memory of the process. 
-  2. Step 6-7: Create a remote thread in the target process to load the DLL. 
+  2. Step 4: Create a remote thread in the target process to load the DLL. 
  
 2. Identify the process that will be injected into. Seeing a string in Ghidra isn't sufficient -- explain how the process gets selected.
 
