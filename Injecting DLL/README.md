@@ -114,9 +114,13 @@ This is also because when using PEViewer, there were no functions exported and i
 
 The malware does something every 60,000 miliseconds. 
 
-Link to sleep: https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep
+Link to Sleep: https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep
 
 
 ![dll_sink image](./dll_sink.png) 
 
 5. What does the malware do every _______ seconds?
+
+Every 60,000 miliseconds, it does action() function which accepts a buffer and the string "Malware Analysis %d". 
+
+![dll_action image](./dll_action.png) 
