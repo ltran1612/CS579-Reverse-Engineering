@@ -16,15 +16,28 @@ The overview of the process is:
       - EnumProcesses() (line 47-49)
     These functions are used to locate the target process into which this malware injects.
 
-    ![sink function](./step1.png)
+    ![step1](./step1.png)
 
   2. It gets the curret directory and gets the path to the DLL to inject. 
+    
+    ![step2](./step2.png)
+
   3. It then finds the process into which to inject. It does this by: 
-      1. It uses EnumProcesses() to get the PID of each process in the system (line...). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
-      2. It loops through halves of the possible PIDs (line...) and check each process with the check_process(pid) function.
+      1. It uses EnumProcesses() to get the PID of each process in the system (line 53). According to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocesses. 
+
+      2. It loops through halves of the possible PIDs (line 58) and check each process with the check_process(pid) function.
+
+      ![step3-1](./step3-1.png)
+
+
+      Let's analyze check_process(pid).
       First, it opens pid, uses EnumProcessModules() retrieve the handle for one module in the process according to https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules. 
       Then, it uses GetModuleBaseNameA() to get the base name of that single module. 
       Finally, it uses the contains() function to check if the module name contains the string "explorer.exe". The contains function works like this...
+
+      ![checkprocess](./check_proc.png)    
+
+     ![step3](./step3-1.png)
   4. After finding the right process, it allocates a space in the target process memory. 
   5. Then, it writes the DLL to that memory address. 
   6. It then find the LoadLibraryA() function inside the target process. 
