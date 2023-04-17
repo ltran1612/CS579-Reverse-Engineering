@@ -48,8 +48,6 @@ The overview of sink() in lab12-01.exe is:
     
     The contains function works like this...
 
-  
-
   4. After finding the right process, it allocates a space in the target process memory. 
   
   Then, it writes the DLL to that memory address. 
