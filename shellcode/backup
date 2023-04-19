@@ -1,0 +1,21 @@
+   // %rdi - path, %rsi and %rdx - set to empty string
+    // "/bin/sh 0x2F62696E2F7368
+    //mov $0x1, %r15
+    //xor %r15, %r15
+    push $0
+    push $0
+    push $0
+    push $0
+    push $0
+    push $0
+    push $0
+    push $0
+    movq %rsp, %rsi
+    movq %rsp, %rdx
+
+    // /sh
+    //push $0x0068732F 
+    push $0x2F736800
+    // /bin
+    //push $0x6E69622F
+    push $0x2F62696E
