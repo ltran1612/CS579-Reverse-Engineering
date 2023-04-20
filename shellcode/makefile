@@ -2,7 +2,7 @@ all: shellcode shellcode_test
 	./shellcode_test
 #./shellcode
 shellcode: shellcode.S
-	as shellcode.S -o shellcode.o
+	as shellcode.S -o shellcode.o 
 	ld shellcode.o -o shellcode --oformat=binary
 	rm shellcode.o
 #--oformat=binary

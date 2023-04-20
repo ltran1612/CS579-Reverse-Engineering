@@ -26,7 +26,6 @@ int main(int argc, char** argv) {
         printf("Error: %d bytes read in shellcode file %s\n", bytes_read, SHELLCODE_PATH);
         return 1;
     }
-
     for (int i = 0; i < bytes_read; ++i) {
         if (exec_me[i] == 0) {
             printf("code contain null bytes %d\n", i);
@@ -36,6 +35,7 @@ int main(int argc, char** argv) {
     }
 
     pclose(shellcode_file);
+    printf("Running shellcode...\n");
 
     foo = ((void*(*)()) exec_me)();
 

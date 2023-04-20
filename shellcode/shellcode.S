@@ -5,14 +5,16 @@ _start:
     xor %rax, %rax
     // push to have array of zeroes on the stack
     pushq %rax
-    // %rdi - path, %rsi and %rdx - set to the address of an empty array of no pointers.
+    // %rsi and %rdx - set these to the address leading to an empty array of no pointers.
+    // we don't need a pointer to an empty string
     movq %rsp, %rsi
     movq %rsp, %rdx
-
+    
+    // %rdi - path
     // "/bin/sh 0x2F62696E2F7368
     // needs to change to little endianess
     movq $0x68732F6E69622F3b, %rbx 
-    // retrieve 0x3b, put it in low 8-bit of rax
+    // retrieve 0x3b, put it in lower 8-bit of rax
     mov %bl, %al
 
     // push the string
