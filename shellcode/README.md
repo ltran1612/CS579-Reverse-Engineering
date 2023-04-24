@@ -4,7 +4,7 @@ The goal of this lab was to learn how to write x86-64 bit program in assembly th
 
 This shellcode will execute /bin/sh using exceve.
  
-We also learned about gdb through using it to write our assembly program. 
+We also learned about gdb through using it to help debug our assembly program by seeing the content of the registers, the codes, the memory, and see the flow of the program. 
 
 ## Program
 ```
