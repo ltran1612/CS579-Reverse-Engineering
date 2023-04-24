@@ -1,6 +1,9 @@
 # Shell code
 
-The goal of this lab was to learn how to write x86-64 bit program in assembly that can be loaded by a C program. This shellcode will execute /bin/sh using exceve 
+The goal of this lab was to learn how to write x86-64 bit program in assembly that can be loaded by a C program.
+
+This shellcode will execute /bin/sh using exceve.
+ 
 We also learned about gdb through using it to write our assembly program. 
 
 ## Program
