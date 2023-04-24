@@ -7,7 +7,7 @@ _start:
     xor %rax, %rax
     // push to have array of zeroes on the stack
     pushq %rax
-    // %rsi and %rdx - set these to the address leading to an empty array of no pointers.
+    // %rsi and %rdx - set these to the address leading to an empty array of pointers.
     // we don't need a pointer to an empty string
     movq %rsp, %rsi
     movq %rsp, %rdx
