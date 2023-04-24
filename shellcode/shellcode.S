@@ -1,3 +1,5 @@
+// Shellcode lab
+// Author: Long Tran
 .globl _start
 .section .text
 _start:

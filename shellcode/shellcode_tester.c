@@ -35,6 +35,12 @@ int main(int argc, char** argv) {
     }
 
     pclose(shellcode_file);
+
+    printf("The program in hex are\n");
+    for (int i = 0; i < bytes_read; ++i) {
+        printf("%x ", exec_me[i] & 0xff);       
+    }
+    printf("\n");
     printf("Running shellcode...\n");
 
     foo = ((void*(*)()) exec_me)();
