@@ -17,7 +17,7 @@ _start:
     xor %rax, %rax
     // push to have array of zeroes on the stack
     pushq %rax
-    // %rsi and %rdx - set these to the address leading to an empty array of no pointers.
+    // %rsi and %rdx - set these to the address leading to an empty array of pointers.
     // we don't need a pointer to an empty string
     movq %rsp, %rsi
     movq %rsp, %rdx
@@ -62,8 +62,10 @@ My shell code is 31 bytes long. Here they are:
 As can be seen from the hexdump, there is no 0 bytes in the code.
 I made sure that there are no NULL bytes by adding a check in the shellcode_tester.c and check if there is a 0 byte read. If there is a 0 byte read, then the program exits.
 
-I realized by adding and removing instructions that the zero bytes only come from the intermediate numbers (e.g: $0x3b) to fill up the 8 bytes.
+I realized through adding and removing instructions that the zero bytes only come from the intermediate numbers (e.g: $0x3b) to fill up the 8 bytes.
 
 Thus, to eliminate NULL bytes, I did 2 things: 
 1. I xor 2 registers to get a value 0 without having to write $0x0. 
-2. I combined both the string "/bin/sh" and the code system call code 0x3b into one number. To get the code, I only simply need to get the lower 8 byte from the register. I then pushed the entire number and to get the address of the string "/bin/sh" only, I incremented the stack pointer by one to get pass 0x3b. 
+2. I combined both the string "/bin/sh" and the code system call code 0x3b into one number to remove the buffered 0x0 byte from the string. To get the code, I only simply need to get the lower 8 byte from the register. I then pushed the entire number and to get the address of the string "/bin/sh" only, I incremented the stack pointer by one to get pass 0x3b. 
+
+I realized the problem I had last time in class, it was because after the string, there were no 0 to end the string.
