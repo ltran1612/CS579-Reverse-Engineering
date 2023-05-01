@@ -9,6 +9,9 @@ We learned how to use the PWN library to check the corefile when the program cra
 ## Program
 
 ### Injection Python Program
+
+Please try to run the program twice, because it may not work on the first one, but my testing showed that it would oftenly work on the second time. 
+
 ```python
 #!/usr/bin/env python3
 
