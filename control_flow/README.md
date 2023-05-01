@@ -1,12 +1,24 @@
-# Control Flow Lab
+# Using Buffer Overflow to Inject Shellcode
 
 The goal of this lab was to learn how to execute buffer overflowing on a test program that is prone to buffer overflowing to execute a piece of shellcode.
 
 This shellcode will execute /bin/sh using exceve.
 
-We learned how to use the PWN library to see the corefile of the  
+We learned how to use the PWN library to check the corefile when the program crashes to debug the injecting process. 
 
 ## Program
+
+### Injection Python Program
+```python
+```
+
+### Shellcode
+
+My shell code is 31 bytes long. Here they are:
+
+    48 31 c0 50 48 89 e6 48 89 e2 48 bb 3b 2f 62 69 6e 2f 73 68 88 d8 53 48 89 e7 48 ff c7 f 5
+
+This was the orignal shellcode.
 ```
 // Shellcode lab
 // Author: Long Tran
@@ -38,34 +50,60 @@ _start:
 
     syscall
 ```
-### Explanation
 
-To set up for the system call, we basically need the following:
+## Explanation
 
-1. Put 0x3b into %rax
-2. Push 8 bytes of 0x0 onto the stack. 
-3. Store the address of the memory of the pushed 0 in %rsi (argv) and %rdx (env). This will lead to an empty array of pointers. 
-4. Push the string "/bin/sh" onto the stack.
-5. Store the address of the string in %rdi. 
-6. Call the system call with `syscall`
+### How I figured out the layout of the payload
+The program into which we tried to inject is a pizza ordering program. It accepts 3 inputs:
 
-However, to remove the zero byte and reduce the size. I made some changes. A detailed instruction can be seen through the comments of the assembly code. 
+1. Customer name. 
+2. Number of Pizzas. 
+3. Credit Card Numbers. 
 
-### Report
+I first tested to see which of these input can be overflowed. 
 
-My shell code is 31 bytes long. Here they are:
+I tested by entering a certain number of A's until the program causes segmetnation fault. If it causes segmetnation fault, it means that the buffer was overflowed and writing over some other variables. 
 
-    48 31 c0 50 48 89 e6 48 89 e2 48 bb 3b 2f 62 69 6e 2f 73 68 88 d8 53 48 89 e7 48 ff c7 f 5
+The result was that the Customer name and the Credit card number can be overflowed.  
 
-### Explanation for NULL bytes        
+Thus, the goal was then to overflow them in some way that will put the shellcode program on the memory and overwrite the return address to that shellcode location so when the function ends, the instruction pointer return to that shellcode location and executes it (I was given the information that this program could execute codes on the stack). 
 
-As can be seen from the hexdump, there is no 0 bytes in the code.
-I made sure that there are no NULL bytes by adding a check in the shellcode_tester.c and check if there is a 0 byte read. If there is a 0 byte read, then the program exits.
+I was also taught through this program that there was a memory leak through printf(); that is, the printf statement was not called with any string containing %d or %s, allowing the users to enter %d or %s in the input string, and printing out the values on the stack of the function.
 
-I realized through adding and removing instructions that the zero bytes only come from the intermediate numbers (e.g: $0x3b) to fill up the 8 bytes.
+Thus, I put around 10 "%p" for the first input, which leaked 10 different 8-byte values on the stack. I then noticed that there was 3 values next to each other that looks like an address on the stack (0x7ff....). Checking the program with gdb showed that the stack address was constantly in that format. 
 
-Thus, to eliminate NULL bytes, I did 2 things: 
-1. I xor 2 registers to get a value 0 without having to write $0x0. 
-2. I combined both the string "/bin/sh" and the code system call code 0x3b into one number to remove the buffered 0x0 byte from the string. To get the code, I only simply need to get the lower 8 byte from the register. I then pushed the entire number and to get the address of the string "/bin/sh" only, I incremented the stack pointer by one to get pass 0x3b. 
+Hence, I tried to first change the previous base stack pointer. To do this, I tried to find the value where it first caused the segmentation fault, and I found that it was when I inserted 136 "A"s. Thus, it suggested to me that it was where the old stack pointer or the return address was.
 
-I realized the problem I had last time in class, it was because after the string, there were no 0 to end the string.
+Using the pwn tools in Python to see the corefile showed that the base stack pointer could be set in the range 128-135 (inclusive). I tested this by changing the value from "A" to "B" and see at which index does the base stack pointer in the corefile changes to those input values.    
+
+Thus, it followed that the return address can be set in the range 136-143 (inclusive). 
+
+I got a hint in class that we should set the return address to the stack pointer.  
+
+Thus, from the 3 leaked values, I picked the first one. Running the program multiple times showed that the value seemed to be constantly 0x20 lower than the stack pointer when the program crashed. I saw this from the corefile by seeing the stack pointer at the end and the leaked value. 
+
+I then tried to figure out exactly where to put my shellcode in the input so that it will be written to the stack pointer location when the program crashes.  
+
+After multiple testing, I noticed that the stack pointer when the program crashes was not the stack pointer of the starting function, but the stack pointer of the caller function. This hinted that I need to insert the shellcode after the return address; that is, insert at a higher address. 
+
+This makese sense because as was told in class, at the end of the function, the function would normally call 'leave' to deallocate the activation record of the current function, moving the stack pointer to the return address. Then, the 'ret' instruction will pop the return address, moving the stack pointer to the location right above it (above in terms of in higher memory location/lower in the stack).   
+
+Hence, I tried to insert the shellcode right after the return address and it just works.
+
+As a result, the layout of my bytearray payload is as follows: 
+
+1. 0-127(inclusive): the value of 'A'. 
+2. 128-135(inclusive): the leaked value. 
+3. 136-143(inclusive): the leaked value + 0x20, which is expected to be the address right after the return address on the stack.  
+4. 144-...: the shellcode.  
+
+
+The reason why the shellcode is at an index higher than 144 is because at least in Linux and with a C program, array elements at higher indexes are stored at a higher memory address than the elements at lower indexes. Testing it with a C program on Ubunto showed that it was true. 
+
+Thus, it also fits the theory I presented. 
+
+### How the python progarm will work. 
+
+The python program will run the pizza program, and at the 3rd input, it will input the payload. After that happens and the function asking for input ends, the program will change the instrtuction pointer to the address right above the stack location of the return address of the ended function. 
+
+Hence, the shellcode will be executed and we will see the sh shell running. 
