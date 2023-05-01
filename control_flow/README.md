@@ -1,10 +1,10 @@
-# Shell code
+# Control Flow Lab
 
-The goal of this lab was to learn how to write x86-64 bit program in assembly that can be loaded by a C program.
+The goal of this lab was to learn how to execute buffer overflowing on a test program that is prone to buffer overflowing to execute a piece of shellcode.
 
 This shellcode will execute /bin/sh using exceve.
- 
-We also learned about gdb through using it to help debug our assembly program by seeing the content of the registers, the codes, the memory, and see the flow of the program. 
+
+We learned how to use the PWN library to see the corefile of the  
 
 ## Program
 ```

